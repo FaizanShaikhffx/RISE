@@ -47,3 +47,18 @@ enqueue(2)
 
 
 print(queue)
+
+def show():
+    if front == -1:
+        print("Queue is empty")
+    else:
+        i = front
+        print("Queue contents:", end=" ")
+        while True:
+            print(queue[i], end=" ")
+            if i == rear:
+                break
+            i = (i + 1) % size
+        print()
+
+show()
