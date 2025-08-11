@@ -1,0 +1,27 @@
+create a vehical class, a vehical is a parent classs and car and bike as a child classes, a method rent vehical should overloaded rental with only days, renting with days and driver for car only
+bike me driver kaa option nahi hoga, 
+aur car bagair driver ke chahiye toh woh bhi ho jayega
+
+3)
+each child class should override the display detail method to show specific details
+
+
+
+
+2---
+ecommerce discount system
+customer is the parent class, regular customer and premium customer are child classes method apply discount should accept purchase amount only
+2) accept purchase ampunt plus coupon code, 
+3) each customer type oveerride get loyalty points to calculate differently
+
+
+3----
+Online learning -platform
+
+course is the parent class, programming course and designing course are the subclass
+enroll is the method, enroll with just name and enroll with the name plus discount code
+course details oveeriding in to child classes
+
+
+4---
+
