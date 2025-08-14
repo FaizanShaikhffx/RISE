@@ -136,3 +136,4 @@ print(f"Front element (peek): {peek()}\n")
 print("Full array representation (including None values):")
 print(queue)
 print("Note: None values represent empty positions")
+

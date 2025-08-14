@@ -40,3 +40,5 @@ push(30)  # 30 ko stack mein daal rahe hain
 print("Top element:", peek())  # Stack ka top element print kar rahe hain
 print("Popped element:", pop())  # Top element ko hata ke print kar rahe hain
 print("Is stack empty?", "Yes" if isEmpty() else "No")  # Stack empty hai ya nahi check kar rahe hain
+
+

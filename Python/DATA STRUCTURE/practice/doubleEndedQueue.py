@@ -276,3 +276,4 @@ print(f"- Can be used as a queue (FIFO): enqueue_rear + dequeue_front")
 print(f"- Can be used as both: insert/delete from either end")
 print(f"- Front pointer: {front} (points to element {queue[front] if front != -1 else 'None'})")
 print(f"- Rear pointer: {rear} (points to element {queue[rear] if rear != -1 else 'None'})")
+

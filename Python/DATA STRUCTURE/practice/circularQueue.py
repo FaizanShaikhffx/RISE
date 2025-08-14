@@ -204,3 +204,4 @@ print(f"- Front pointer: {front} (points to element {queue[front] if front != -1
 print(f"- Rear pointer: {rear} (points to element {queue[rear] if rear != -1 else 'None'})")
 print(f"- When we add elements, rear wraps around from {size-1} to 0")
 print(f"- When we remove elements, front wraps around from {size-1} to 0")
+
