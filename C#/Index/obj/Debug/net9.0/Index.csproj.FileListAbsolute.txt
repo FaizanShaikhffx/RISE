@@ -1,0 +1,15 @@
+E:\FAIZAN\RISE\C#\Index\bin\Debug\net9.0\Index.exe
+E:\FAIZAN\RISE\C#\Index\bin\Debug\net9.0\Index.deps.json
+E:\FAIZAN\RISE\C#\Index\bin\Debug\net9.0\Index.runtimeconfig.json
+E:\FAIZAN\RISE\C#\Index\bin\Debug\net9.0\Index.dll
+E:\FAIZAN\RISE\C#\Index\bin\Debug\net9.0\Index.pdb
+E:\FAIZAN\RISE\C#\Index\obj\Debug\net9.0\Index.GeneratedMSBuildEditorConfig.editorconfig
+E:\FAIZAN\RISE\C#\Index\obj\Debug\net9.0\Index.AssemblyInfoInputs.cache
+E:\FAIZAN\RISE\C#\Index\obj\Debug\net9.0\Index.AssemblyInfo.cs
+E:\FAIZAN\RISE\C#\Index\obj\Debug\net9.0\Index.csproj.CoreCompileInputs.cache
+E:\FAIZAN\RISE\C#\Index\obj\Debug\net9.0\Index.sourcelink.json
+E:\FAIZAN\RISE\C#\Index\obj\Debug\net9.0\Index.dll
+E:\FAIZAN\RISE\C#\Index\obj\Debug\net9.0\refint\Index.dll
+E:\FAIZAN\RISE\C#\Index\obj\Debug\net9.0\Index.pdb
+E:\FAIZAN\RISE\C#\Index\obj\Debug\net9.0\Index.genruntimeconfig.cache
+E:\FAIZAN\RISE\C#\Index\obj\Debug\net9.0\ref\Index.dll
