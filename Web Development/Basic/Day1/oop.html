@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OOP Fundamentals — Animated</title>
+  <style>
+    :root{
+      --bg-1:#0f1226;
+      --bg-2:#101932;
+      --card:#0c1124cc; /* glassy */
+      --text:#eaf0ff;
+      --muted:#a9b4d6;
+      --accent:#7aa5ff;
+      --accent-2:#9a7aff;
+      --line:#cfd8ff;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 22px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+      color:var(--text);
+      background: radial-gradient(1200px 800px at 70% -10%, #1a2a6c33, transparent),
+                  radial-gradient(900px 700px at 10% 120%, #b21f1f22, transparent),
+                  linear-gradient(180deg, var(--bg-1), var(--bg-2));
+      overflow-x:hidden;
+    }
+
+    .wrap{position:relative; min-height:100vh; padding:64px 16px 120px;}
+
+    /* Top OOP Box */
+    .hero{
+      width:min(720px, 92vw);
+      margin:0 auto;
+      padding:24px 28px;
+      background:linear-gradient(180deg,#111936,#0d122a);
+      border:1px solid #2a345a;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      position:relative;
+      text-align:center;
+    }
+    .badge{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background:#ffffff10; border:1px solid #ffffff1a; font-size:12px; letter-spacing:.08em; color:var(--muted)}
+    .title{font-size: clamp(24px, 5vw, 36px); margin:12px 0 6px; font-weight:800; letter-spacing:.5px}
+    .subtitle{font-size: clamp(13px, 2.5vw, 16px); color:var(--muted); margin:0}
+
+    /* SVG line container */
+    .line-stage{position:relative; width:min(900px, 94vw); margin:28px auto 0; height: 560px;}
+    svg{position:absolute; inset:0; overflow:visible}
+
+    /* Points */
+    .point{position:absolute; width:14px; height:14px; border-radius:999px; background: linear-gradient(180deg, var(--accent), var(--accent-2)); box-shadow: 0 0 0 0 rgba(122,165,255,.6); transform:translate(-50%,-50%); opacity:0;}
+    .point.pulse{animation: pulse 1.6s ease-out 2;}
+    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(122,165,255,.6)} 70%{box-shadow:0 0 0 22px rgba(122,165,255,0)} 100%{box-shadow:0 0 0 0 rgba(122,165,255,0)}}
+
+    /* Cards */
+    .card{
+      position:absolute; width:min(420px, 86vw);
+      background: var(--card);
+      backdrop-filter: blur(8px);
+      border: 1px solid #ffffff1a;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding:18px 18px 16px 18px;
+      opacity:0; transform: translateY(8px) translateX(var(--x,0));
+      will-change: transform, opacity;
+    }
+    .card h3{margin:0 0 8px; font-size: clamp(16px, 3.6vw, 20px)}
+    .card p{margin:0; color:var(--muted); font-size: clamp(13px, 3vw, 15px); line-height:1.45}
+
+    /* Draw animation for the path */
+    path#spine{stroke: var(--line); stroke-width:2.5; fill:none; filter: drop-shadow(0 8px 20px rgba(122,165,255,.1));}
+    .animate path#spine{transition: stroke-dashoffset 3s cubic-bezier(.22,1,.36,1);}
+
+    /* Appear animations */
+    .show{animation: rise .7s cubic-bezier(.22,1,.36,1) forwards}
+    @keyframes rise{from{opacity:0; transform: translateY(10px) translateX(var(--x,0));} to{opacity:1; transform: translateY(0) translateX(0);} }
+
+    /* Helper: subtle grid */
+    .grid::before{
+      content:""; position:absolute; inset:0; pointer-events:none; opacity:.05;
+      background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px);
+      background-size: 40px 40px; mask: radial-gradient(80% 60% at 50% 0%, black, transparent);
+    }
+
+    /* Responsive tuning */
+    @media (max-width:720px){
+      .line-stage{height: 620px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap grid">
+    <section class="hero" id="hero">
+      <span class="badge">OOP • Core Concepts</span>
+      <h1 class="title">Object‑Oriented Programming</h1>
+      <p class="subtitle">Watch the fundamentals unfold as the line grows</p>
+    </section>
+
+    <!-- Line + Points + Cards stage -->
+    <div class="line-stage" id="stage">
+      <!-- SVG animated vertical spine -->
+      <svg id="svg" viewBox="0 0 900 700" preserveAspectRatio="xMidYMin slice" aria-hidden="true">
+        <!-- Path is drawn from under the hero box downward; tiny bends for visual interest -->
+        <path id="spine" d="M450,40 C450,80 450,120 450,160 C450,200 450,240 450,280 C450,320 450,360 450,400 C450,440 450,480 450,520"/>
+      </svg>
+
+      <!-- POINTS (positioned at the same y as key parts of the path) -->
+      <div class="point" id="p1" style="left:450px; top:160px"></div>
+      <div class="point" id="p2" style="left:450px; top:280px"></div>
+      <div class="point" id="p3" style="left:450px; top:400px"></div>
+      <div class="point" id="p4" style="left:450px; top:520px"></div>
+
+      <!-- CARDS -->
+      <article class="card" id="c1" style="--x:-18px; left: 40px; top: 130px">
+        <h3>Encapsulation</h3>
+        <p>Bundle data and methods together. Hide internals and expose a clean interface so state changes stay controlled.</p>
+      </article>
+
+      <article class="card" id="c2" style="--x:18px; right: 40px; top: 250px">
+        <h3>Abstraction</h3>
+        <p>Focus on what an object does, not how it does it—simplify complexity with well‑chosen models.</p>
+      </article>
+
+      <article class="card" id="c3" style="--x:-18px; left: 40px; top: 370px">
+        <h3>Inheritance</h3>
+        <p>Share behavior via parent→child relationships. Reuse code and model natural hierarchies when it makes sense.</p>
+      </article>
+
+      <article class="card" id="c4" style="--x:18px; right: 40px; top: 490px">
+        <h3>Polymorphism</h3>
+        <p>Different objects respond to the same message in their own way—unlock flexible, extensible designs.</p>
+      </article>
+    </div>
+  </div>
+
+  <script>
+    // On load: animate the path drawing, then reveal points & cards in sequence
+    (function(){
+      const root = document.body;
+      const path = document.getElementById('spine');
+      const points = [
+        document.getElementById('p1'),
+        document.getElementById('p2'),
+        document.getElementById('p3'),
+        document.getElementById('p4'),
+      ];
+      const cards = [
+        document.getElementById('c1'),
+        document.getElementById('c2'),
+        document.getElementById('c3'),
+        document.getElementById('c4'),
+      ];
+
+      function drawPath(){
+        const length = path.getTotalLength();
+        path.style.strokeDasharray = length;
+        path.style.strokeDashoffset = length;
+        // force layout before transition
+        path.getBoundingClientRect();
+        root.classList.add('animate');
+        // animate to 0
+        path.style.strokeDashoffset = '0';
+      }
+
+      function sequence(){
+        // timings tuned relative to the 3s path transition
+        const base = 450; // initial small delay (ms)
+        const step = 650; // gap between reveals
+        points.forEach((el, i)=>{
+          setTimeout(()=>{
+            el.style.opacity = 1;
+            el.classList.add('pulse');
+            cards[i].classList.add('show');
+          }, base + i*step);
+        });
+      }
+
+      window.addEventListener('DOMContentLoaded', ()=>{
+        drawPath();
+        sequence();
+      });
+    })();
+  </script>
+</body>
+</html>
