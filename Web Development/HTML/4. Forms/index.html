@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assignment 2</title>
+  </head>
+  <body>
+    <form>
+      <fieldset>
+        <legend>Basic Details</legend>
+        <label for="name">Full Name</label>
+        <input type="text" required placeholder="Full Name" id="name" />
+        <br />
+        <br />
+        <label for="email"> Email Address:</label>
+        <input type="email" required placeholder="email" />
+        <br />
+        <br />
+        <label for="password"> Password:</label>
+        <input
+          type="password"
+          required
+          placeholder="Password"
+          min="6"
+          id="password"
+        />
+        <br />
+        <br />
+
+        <label for="confirm password">Confirm Password:</label>
+        <input
+          type="password"
+          required
+          placeholder="confirm Password"
+          id="confirm password"
+        />
+      </fieldset>
+      <br />
+      <fieldset>
+        <legend>Contact Information</legend>
+        <label for="phone">Phone Number</label>
+        <input
+          type="tel"
+          required
+          placeholder="Phone Number"
+          id="phone"
+          max="10"
+        />
+        <br />
+        <br />
+        <label for="url">Website/Portfolio URL</label>
+        <input
+          type="url"
+          required
+          placeholder="Website/Portfolio URL"
+          id="url"
+        />
+        <br />
+        <br />
+        <label for="file">Upload Profile Picture</label>
+        <input
+          type="file"
+          required
+          placeholder="Upload Profile Picture"
+          id="file"
+        />
+      </fieldset>
+
+      <br />
+
+      <fieldset>
+        <legend>Selection Input</legend>
+        <label>Gender</label>
+        <br />
+        <label>Male</label>
+        <input type="radio" required id="male" name="abc" />
+        <label>Female</label>
+        <input type="radio" required id="female" name="abc" />
+        <br />
+        <br />
+        <label for="Skills">Skills :</label>
+        <br />
+        <label>
+          <input type="checkbox" name="option1" value="A" />
+          HTML
+        </label>
+        <label>
+          <input type="checkbox" name="option1" value="B" />
+          CSS
+        </label>
+        <label>
+          <input type="checkbox" name="option1" value="B" />
+          JavaScript
+        </label>
+        <label>
+          <input type="checkbox" name="option1" value="B" />
+          React
+        </label>
+        <label>
+          <input type="checkbox" name="option1" value="B" />
+          Angular
+        </label>
+        <br />
+        <br />
+        <label for="">Select Location : </label>
+        <select name="location" required>
+          <option value="" disabled selected>Select option</option>
+          <option value="Vadodara">Vadodara</option>
+          <option value="Surat">Surat</option>
+          <option value="Ahemadabad">Ahemadabad</option>
+          <option value="Anand">Anand</option>
+        </select>
+      </fieldset>
+
+      <br />
+      <fieldset>
+        <legend>Advanced Input</legend>
+        <label>
+          <label>
+            Date Of Birth
+            <input type="date" name="" id="" />
+          </label>
+          <br />
+          <br />
+          <label>
+            Select a week
+            <input type="week" name="" id="" />
+          </label>
+          <br />
+          <br />
+          <label>
+            Select a month
+            <input type="month" name="" id="" />
+          </label>
+          <br />
+          <br />
+          <label>
+            Choose a Time
+            <input type="time" name="" id="" />
+          </label>
+          <br />
+          <br />
+          <label>
+            Choose a Local Date & Time
+            <input type="datetime-local" name="" id="" />
+          </label>
+          <br />
+          <br />
+          <label>
+            Pick Your Favorite Colour
+            <input type="color" name="" id="" />
+          </label>
+          <br />
+          <br />
+          <label>
+            Age
+            <input type="number" min="10" max="35" name="" id="" />
+          </label>
+          <br />
+          <br />
+          <label>
+            Range for Experience
+            <input type="range" />
+          </label>
+        </label>
+      </fieldset>
+
+      <fieldset>
+        <legend>Text Input</legend>
+        <label>
+          About Yourself
+          <textarea name="" id="" rows="4"></textarea>
+        </label>
+        <br><br>
+        <label>
+          Address
+          <textarea name="" id="" aria-multiline="true"></textarea>
+        </label>
+        <br>
+        <br>
+        <button type="reset">reset</button>
+        <button type="submit">Create Profile</button>
+      </fieldset>
+    </form>
+  </body>
+</html>
