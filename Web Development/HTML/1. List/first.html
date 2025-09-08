@@ -5,30 +5,94 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Day 1</title>
 </head>
+<style>
+  body{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0px;
+    padding: 0px;
+  }
+  .parent{
+    display: flex;
+    justify-content: center;
+  }
+  h1{
+    color: #180f8b;
+    text-align: center;
+    margin: 0;
+  }
+  .nav{
+    background-color: rgb(233, 231, 231);
+    margin: 0;
+    padding: 0;
+    height: 60px;
+    align-items: center;
+    border-bottom: 1px solid rgb(217, 214, 214);
+  }
+
+  h3, h2{
+    color: #271db5;
+  }
+
+  p, li, pre{
+    color: #3256e7;
+  }
+  h2, h3,li:hover{
+    color: #ec2341;
+  }
+ 
+
+  .box-style{
+    width: 300px;
+    background-color: rgba(218, 215, 215, 0.54);
+    padding: 10px ;
+    border-radius: 10px;
+    padding-left: 20px;
+    margin-bottom: 20px;
+    
+  }
+  .box-style:hover {
+    transform: scale(1.03);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+  }
+  
+
+</style>
 <body>
-  <h1>First Assignment</h1>
+  <div class="nav">
+    <h1>First Assignment</h1>
+  </div>
+  <div class="parent">
+    <div>
   <h2>HTML Tags</h2>
   <p>Hello this is the p tag</p>
   <pre>This is the tag which accepts spaces          Space applied</pre>
-  <h3>Languages To Learn</h3>
-  <ul type="square">
-    <li>Angular</li>
-    <li>HTML</li>
-    <li>CSS</li>
-    <li>Javascript</li>
-    <li>Python</li>
-  </ul>
 
-  <h3>My Top Favorite Foods</h3>
-  <ol type="I" start="8">
-    <li>Pasta</li>
-    <li>Tacos</li>
+  <div class="box-style">
+    <h3>Languages To Learn</h3>
+    <ul type="square">
+      <li>Angular</li>
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>Javascript</li>
+      <li>Python</li>
+    </ul>
+  </div>
+
+  <div class="box-style">
+
+    <h3>My Top Favorite Foods</h3>
+    <ol type="I" start="8">
+      <li>Pasta</li>
+      <li>Tacos</li>
     <li>Soft Pretzels</li>
     <li>Pasta</li>
     <li>tacos</li>
     <li>Soft Pretzels</li>
   </ol>
+</div>
 
+<div class="box-style">
   <h3>Our Drinks</h3>
   <ul><li>Hot</li>
     <ul type="circle">
@@ -36,6 +100,10 @@
       <li>tea</li>
   </ul>
   </ul>
+
+
+
+
 
   <ul><li>Cold</li>
     <ul type="circle">
@@ -48,7 +116,10 @@
       <li>Sparkling Water</li>
   </ul>
   </ul>
-  
+  </div>
+  <div class="box-style">
+
+
   <h3>Specialization</h3>
   <ol type="a" start="4" reversed>
     <li>Frontend</li>
@@ -81,6 +152,13 @@
       <li>Database</li>
       <li>Cloud</li>
   </ol>
+    </div>
+  </div>
+  <div class="image">
+    <img width="750" src="hero.jpg" alt="">
+  </div>
+</div>
+ 
     
     
 
