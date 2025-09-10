@@ -5,19 +5,107 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Assignment 2</title>
   </head>
+  <style>
+    body{
+      font-family: Verdana, Geneva, Tahoma, sans-serif;
+    
+    }
+    fieldset{
+      background-color: rgb(246, 244, 244);
+      padding: 10px;
+      border-radius: 7px;
+      margin-top: 20px;
+    }
+    legend{
+      border-style: none;
+      border-color: rgb(235, 231, 227);
+      
+    }
+    input{
+      padding: 5px;
+      border-radius: 4px;
+      border: 1px solid rgb(227, 223, 223);
+      margin-top: 25px;
+      width: 95%;
+     margin-left: 20px;
+    }
+    input[type="radio"],
+    input[type="checkbox"] {
+      width: auto;     
+      margin: 5px; 
+      margin-top: 20px;    
+    }
+    form{
+      width: 50%;
+      margin-left: auto;
+      margin-right: auto;
+    }
+   label{
+    margin-left: 20px;
+  }
+  textarea{
+    margin-left: 20px;
+    width: 95%;
+    height: 75px;
+    border: 1px solid rgb(227, 224, 224);
+   }
+   h2{
+    text-align: center;
+    position: sticky;
+    top: 0;
+    background-color: rgb(48, 48, 206);
+    width: 49%;
+    color: white;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 5px;
+    border-radius: 5px;
+   }
+   button{
+    background-color: rgb(59, 59, 231);
+    width: 750px;
+    padding: 10px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    
+   }
+   button:hover{
+    background-color: rgb(98, 98, 232);
+    width: 750px;
+    padding: 10px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    
+   }
+   select{
+    margin-left: 20px;
+    margin-top: 25px;
+   }
+   
+  </style>
   <body>
+
+
+    <h2>Complete Profile Form</h2>
     <form>
       <fieldset>
         <legend>Basic Details</legend>
         <label for="name">Full Name</label>
+        <br>
         <input type="text" required placeholder="Full Name" id="name" />
         <br />
         <br />
         <label for="email"> Email Address:</label>
+        <br>
         <input type="email" required placeholder="email" />
         <br />
         <br />
         <label for="password"> Password:</label>
+        <br>
         <input
           type="password"
           required
@@ -29,6 +117,7 @@
         <br />
 
         <label for="confirm password">Confirm Password:</label>
+        <br>
         <input
           type="password"
           required
@@ -40,6 +129,7 @@
       <fieldset>
         <legend>Contact Information</legend>
         <label for="phone">Phone Number</label>
+        <br>
         <input
           type="tel"
           required
@@ -50,6 +140,7 @@
         <br />
         <br />
         <label for="url">Website/Portfolio URL</label>
+        <br>
         <input
           type="url"
           required
@@ -59,6 +150,7 @@
         <br />
         <br />
         <label for="file">Upload Profile Picture</label>
+        <br>
         <input
           type="file"
           required
@@ -72,6 +164,7 @@
       <fieldset>
         <legend>Selection Input</legend>
         <label>Gender</label>
+        
         <br />
         <label>Male</label>
         <input type="radio" required id="male" name="abc" />
@@ -104,6 +197,7 @@
         <br />
         <br />
         <label for="">Select Location : </label>
+        <br>
         <select name="location" required>
           <option value="" disabled selected>Select option</option>
           <option value="Vadodara">Vadodara</option>
@@ -117,71 +211,88 @@
       <fieldset>
         <legend>Advanced Input</legend>
         <label>
-          <label>
+          
             Date Of Birth
-            <input type="date" name="" id="" />
           </label>
+          <br>
+          <input type="date" name="" id="" />
           <br />
           <br />
           <label>
             Select a week
-            <input type="week" name="" id="" />
           </label>
+          <br>
+          <input type="week" name="" id="" />
           <br />
           <br />
           <label>
             Select a month
-            <input type="month" name="" id="" />
           </label>
+          <br>
+          <input type="month" name="" id="" />
           <br />
           <br />
           <label>
             Choose a Time
-            <input type="time" name="" id="" />
           </label>
+          <br>
+          <input type="time" name="" id="" />
           <br />
           <br />
           <label>
             Choose a Local Date & Time
-            <input type="datetime-local" name="" id="" />
           </label>
+          <br>
+          <input type="datetime-local" name="" id="" />
           <br />
           <br />
           <label>
             Pick Your Favorite Colour
-            <input type="color" name="" id="" />
           </label>
+          <br>
+          <input type="color" name="" id="" />
           <br />
           <br />
           <label>
             Age
-            <input type="number" min="10" max="35" name="" id="" />
           </label>
+          <br>
+          <input type="number" min="10" max="35" name="" id="" />
           <br />
           <br />
           <label>
             Range for Experience
-            <input type="range" />
           </label>
+          <br>
+          <input type="range" />
         </label>
       </fieldset>
 
       <fieldset>
         <legend>Text Input</legend>
-        <label>
-          About Yourself
-          <textarea name="" id="" rows="4"></textarea>
-        </label>
-        <br><br>
-        <label>
-          Address
-          <textarea name="" id="" aria-multiline="true"></textarea>
-        </label>
+        <label for="">About Yourself:</label>
         <br>
         <br>
-        <button type="reset">reset</button>
-        <button type="submit">Create Profile</button>
+        <textarea name="" id=""></textarea>
+        <br>
+        <br>
+        <label for="">Address:</label>
+        <br>
+        <textarea name="" id=""></textarea>
       </fieldset>
+        <br>
+        <br>
+        <fieldset>
+          <legend>Form Controls</legend>
+          <div class="buttonParent">
+            <div>
+              <button type="reset">Reset</button>
+            </div>
+            <div>
+              <button type="submit">Create Profile</button>
+            </div>
+          </div>
+        </fieldset>
     </form>
   </body>
 </html>
