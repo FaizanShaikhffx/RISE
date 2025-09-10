@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assignment 3</title>
+</head>
+<style>
+  /* .container{
+    display: flex;
+
+  } */
+   .boxes{
+    height: 250px; 
+   }
+   .box1{
+    background-color:palevioletred;
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    left: 80%;
+    transform: skewX(40deg);
+  }
+   .box2{
+    background-color:rgb(196, 181, 226);
+    width: 50px;
+    height: 100px;
+    position: absolute;
+    top: 25%;
+    left: 50%;
+    transform: rotate(90deg);
+   }
+   .box3{
+    background-color:olivedrab;
+    width: 250px;
+    height: 100px;
+    position: fixed;
+    left: 85%;
+    top: 75%;
+   }
+   .box4{
+    background-color:rgb(230, 149, 91);
+    width: 60px;
+    height: 130px;
+    position: absolute;
+    font-size: 14px;
+   }
+   .box4:hover{
+    animation-name: boxAnimation;
+    animation-duration: 5s;
+   }
+   @keyframes boxAnimation {
+    0%{
+      top: 0px; 
+      left: 0px; 
+    }
+    25%{
+      top: 25px; 
+      left: 25px; 
+    }
+    100%{
+      top: 100px; 
+      left: 100px; 
+    }
+   }
+    .box5{
+    background-color:rgba(40, 40, 239, 0.786);
+    width: 120px;
+    height: 120px;
+    position: sticky;
+    left: 15%;
+    top: 50%;
+    color: white;
+    
+  }
+</style>
+<body>
+<div class="container">
+  <div class="boxes">
+    <div class="box1">Box 1</div>
+    <div class="box2">Box 2</div>
+    <div class="box3">Box 3 - This is my original position, will not move even on scroll</div>
+    <div class="box4">Box 4 - Hover on me and I will change my position</div>
+    <div class="box5">Box 5 - Scroll and i will be at the top - visible</div>
+  </div>
+  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Est consequatur omnis, enim eius aperiam corrupti consectetur. Enim impedit ab officiis unde facilis repellat tempore mollitia necessitatibus voluptates corporis distinctio minus voluptatibus odio laborum alias, eligendi rem et ipsam rerum non ut natus quidem laboriosam voluptate? Nam doloribus esse asperiores sequi odit ut, quasi tenetur excepturi architecto, dolorum ipsam aperiam consequuntur iusto possimus praesentium? Reiciendis, recusandae laudantium a voluptates architecto cum sed cumque labore delectus voluptatem dicta, dignissimos obcaecati saepe expedita nesciunt harum modi optio minima, quos alias id enim nostrum omnis! Doloribus ipsa animi odit sint fugiat excepturi praesentium? Minus dolorum incidunt labore consequatur quaerat pariatur accusantium excepturi debitis repellendus quas sint facilis laborum nihil eligendi temporibus similique nisi autem, fugit nemo rerum unde, aliquam, ratione mollitia magni? Explicabo doloremque nam voluptatem et asperiores officia! Corrupti, harum? Maiores vero, ipsam voluptatibus accusamus, possimus doloremque perspiciatis sunt consequuntur facilis, voluptatem molestiae repudiandae! Numquam repellendus modi harum eligendi dolorum animi aut veniam impedit ullam iste sed excepturi maiores pariatur quisquam illo fugiat ratione ut tempora laboriosam, fugit totam! Dolorem ea distinctio suscipit quibusdam ad quisquam quos atque molestias aliquam optio aspernatur, illum quam ab cumque, at tempore ipsa! Totam asperiores repellat doloribus.</p>
+</div>
+</body>
+</html>
