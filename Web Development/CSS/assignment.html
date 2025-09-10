@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assignment</title>
+</head>
+<style>
+  .parent{
+    border: 2px solid blue;
+    border-top: 0px;
+    border-radius: 15px;
+    padding: 15px;
+  }
+  .child2{
+    border: 4px solid green;
+    border-right: 0;
+    border-left: 0;
+    border-top: 0;
+    border-style: double;
+    border-radius: 25px ;
+    padding: 25px
+  }
+  .child3{
+    border-style: dashed;
+    border-color:rgb(161, 5, 161);
+    outline: 2px solid gray;
+    outline-offset: 5px;
+  }
+  .child3-sub{
+    border: 2px solid rgb(216, 216, 25);
+    margin: 10px;
+    padding: 10px;
+  }
+</style>
+<body>
+  <div class="parent">
+    <p>Apply CSS to the heading using element</p>
+    <br>
+    <br>
+    <div class="child2">
+      Apply CSS using ID
+    </div>
+    <br>
+    <div class="child3">
+      <div class="child3-sub">
+        Apply CSS using Class valid name
+      </div>
+    <div class="child3-sub">
+        Apply CSS using Class with the same name as above
+      </div>
+    </div>
+
+
+  </div>
+</body>
+</html>
