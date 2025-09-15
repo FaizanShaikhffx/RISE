@@ -170,12 +170,50 @@
 // Console.WriteLine(myWords.PadLeft(13));
 // Console.WriteLine(myWords.PadLeft(14));
 
-int a = 10;
-Console.WriteLine(a);
+// string message = "Find what is (inside the parentheses)";
 
-for (int i = 1; i < 1000000; i++)
-{ 
-Console.WriteLine(i+" ");
-    
-}
+// int openingPosition = message.IndexOf('(');
+// int closingPosition = message.IndexOf(')');
+
+// // Console.WriteLine(openingPosition);
+// // Console.WriteLine(closingPosition);
+
+// int length = closingPosition - openingPosition;
+// Console.WriteLine(message.Substring(openingPosition, length));
+
+// string data = "12345John Smith          5000  3  ";
+// string updatedData = data.Remove(5, 20);
+// Console.WriteLine(updatedData);
+
+// string message = "This--is--ex-amp-le--da-ta";
+// message = message.Replace("--", " ");
+// message = message.Replace("-", "");
+// Console.WriteLine(message);
+
+// const string input = "<div><h2>Widgets &trade;</h2><span>5000</span></div>";
+
+// string quantity = "5000";
+// string output = "Widgets &trade";
+
+// // Your work here
+
+// Console.WriteLine(quantity);
+// Console.WriteLine(output);
+
+// #1 the ourAnimals array will store the following: 
+// string animalSpecies = "";
+// string animalID = "";
+// string animalAge = "";
+// string animalPhysicalDescription = "";
+// string animalPersonalityDescription = "";
+// string animalNickname = "";
+
+// // #2 variables that support data entry
+// int maxPets = 8;
+// string? readResult;
+// string menuSelection = "";
+
+// // #3 array used to store runtime data, there is no persisted data
+// string[,] ourAnimals = new string[maxPets, 6];
+
 

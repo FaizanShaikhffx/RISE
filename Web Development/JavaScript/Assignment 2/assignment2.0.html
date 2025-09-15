@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assignment 2</title>
+</head>
+<style>
+  button{
+    background-color: black;
+    color: white;
+    border-style: none;
+    border-radius: 3px;
+    padding: 10px;
+  }
+  body{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+</style>
+<body>
+  <button class="btnGenerateUsername" onclick="generateUsername()" >Generate Username</button>
+  <p id="username">Your Generated Username is : </p>
+</body>
+<script>
+// Prompt the user to enter their full name. Generate a username for them based on the input. Start username with @,followed by their first name initial, lastname and length.
+
+function generateUsername(){
+  let inputPrompt = prompt("Enter Your Full Name")
+  let firstnameInitial = inputPrompt.charAt(0);
+  let fulllname = inputPrompt.split(' ');
+  let lastname = fulllname[1];
+  let lengthOfName = (firstnameInitial+""+lastname).length;
+ 
+
+  document.getElementById('username').innerHTML = "Your Generated Username is : "+firstnameInitial+""+lastname+""+lengthOfName
+}
+
+</script>
+</html>
+
+<!-- 
+
+prompt("Enter Your Full Name")
+
+
+
+
+
+
+// Get initials of the names with . in between 2 initials -->

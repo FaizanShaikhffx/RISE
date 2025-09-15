@@ -1,0 +1,318 @@
+-- ==============================
+-- DATABASE SELECTION
+-- ==============================
+USE RISEJULY2025;
+GO
+
+-- =====================================================================
+-- 1. BASIC DML TRIGGERS (ON TABLE: EMPLOYEE)
+-- =====================================================================
+
+-- 1.1 UPDATE TRIGGER
+CREATE TRIGGER TR_EMPLOYEE_UPDATE
+ON EMPLOYEE
+FOR UPDATE
+AS
+BEGIN
+    PRINT 'Employee details updated!';
+    SELECT * FROM deleted;  -- Old values
+    SELECT * FROM inserted; -- New values
+END;
+GO
+
+UPDATE EMPLOYEE
+SET ESALARY = 90000
+WHERE EID = 101;
+GO
+
+-- 1.2 INSERT TRIGGER
+CREATE TRIGGER TR_EMPLOYEE_INSERT
+ON EMPLOYEE
+FOR INSERT
+AS
+BEGIN
+    PRINT 'A new employee has joined!';
+    SELECT 'Inserted Records:' AS INFO;
+    SELECT * FROM inserted;
+END;
+GO
+
+INSERT INTO EMPLOYEE VALUES
+(116, 'FAIZAN', 23, 200000, 'FAIZAN@GMAIL.COM', 'FS', 'INDIA');
+GO
+
+-- 1.3 DELETE TRIGGER
+CREATE TRIGGER TR_EMPLOYEE_DELETE
+ON EMPLOYEE
+FOR DELETE
+AS
+BEGIN
+    PRINT 'An employee has been deleted!';
+    SELECT * FROM deleted;
+END;
+GO
+
+DELETE FROM EMPLOYEE
+WHERE EID = 106;
+GO
+
+SELECT * FROM EMPLOYEE;
+GO
+
+-- =====================================================================
+-- 2. AUDIT TRAIL TRIGGERS (ON TABLE: EMPLOYEE)
+-- =====================================================================
+
+-- 2.1 CREATE AUDIT TABLE
+CREATE TABLE EMPLOYEE_AUDIT (
+    AUDIT_ID INT IDENTITY PRIMARY KEY,
+    EID INT,
+    OLD_SALARY MONEY,
+    NEW_SALARY MONEY,
+    CHANGE_DATE DATETIME DEFAULT GETDATE()
+);
+GO
+
+-- 2.2 UPDATE AUDIT TRIGGER
+CREATE TRIGGER TR_EMPLOYEE_AUDIT_UPDATE
+ON EMPLOYEE
+FOR UPDATE
+AS
+BEGIN
+    INSERT INTO EMPLOYEE_AUDIT (EID, OLD_SALARY, NEW_SALARY)
+    SELECT D.EID, D.ESALARY, I.ESALARY
+    FROM deleted D
+    INNER JOIN inserted I ON D.EID = I.EID
+    WHERE D.ESALARY <> I.ESALARY;
+END;
+GO
+
+UPDATE EMPLOYEE
+SET ESALARY = 80000
+WHERE EID = 102;
+GO
+
+-- 2.3 DELETE AUDIT TRIGGER
+CREATE TRIGGER TR_EMPLOYEE_AUDIT_DELETE
+ON EMPLOYEE
+FOR DELETE
+AS
+BEGIN
+    INSERT INTO EMPLOYEE_AUDIT (EID, OLD_SALARY, CHANGE_DATE)
+    SELECT EID, ESALARY, GETDATE()
+    FROM deleted;
+END;
+GO
+
+DELETE FROM EMPLOYEE
+WHERE EID = 102;
+GO
+
+SELECT * FROM EMPLOYEE_AUDIT;
+GO
+
+-- =====================================================================
+-- 3. PREVENT NEGATIVE SALARY
+-- =====================================================================
+CREATE TRIGGER TR_EMPLOYEE_PREVENT_NEGATIVE_SALARY
+ON EMPLOYEE
+FOR INSERT, UPDATE
+AS
+BEGIN
+    IF EXISTS (SELECT 1 FROM inserted WHERE ESALARY < 0)
+    BEGIN
+        ROLLBACK TRANSACTION;
+        PRINT 'ERROR: Negative salary is not allowed!';
+    END
+END;
+GO
+
+-- =====================================================================
+-- 4. AUTO-UPDATE LAST MODIFIED DATE
+-- =====================================================================
+-- Add column to store last modified date if not already exists
+IF NOT EXISTS (
+    SELECT 1 FROM sys.columns 
+    WHERE name = 'LAST_MODIFIED' AND object_id = OBJECT_ID('EMPLOYEE')
+)
+BEGIN
+    ALTER TABLE EMPLOYEE ADD LAST_MODIFIED DATE;
+END;
+GO
+
+CREATE TRIGGER TR_EMPLOYEE_AUTO_LAST_MODIFIED
+ON EMPLOYEE
+FOR UPDATE
+AS
+BEGIN
+    UPDATE EMPLOYEE
+    SET LAST_MODIFIED = GETDATE()
+    WHERE EID IN (SELECT EID FROM inserted);
+END;
+GO
+
+-- =====================================================================
+-- 5. INSTEAD OF TRIGGERS
+-- =====================================================================
+
+-- 5.1 PREVENT SALARY DECREASE
+CREATE TRIGGER TR_EMPLOYEE_PREVENT_SALARY_DECREASE
+ON EMPLOYEE
+INSTEAD OF UPDATE
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1 
+        FROM inserted I
+        JOIN deleted D ON I.EID = D.EID
+        WHERE I.ESALARY < D.ESALARY
+    )
+    BEGIN
+        RAISERROR('ERROR: Salary cannot be decreased!', 16, 1);
+        ROLLBACK TRANSACTION;
+    END
+    ELSE
+    BEGIN
+        UPDATE EMPLOYEE
+        SET ESALARY = I.ESALARY
+        FROM inserted I
+        WHERE EMPLOYEE.EID = I.EID;
+    END
+END;
+GO
+
+-- =====================================================================
+-- 6. INSTEAD OF TRIGGER ON VIEW (AUTO INSERT / DELETE / UPDATE)
+-- =====================================================================
+
+-- Create required tables
+CREATE TABLE DEPARTMENT (
+    DEPT_ID INT PRIMARY KEY,
+    DEPT_NAME VARCHAR(50)
+);
+
+CREATE TABLE EMPLOYEE_DETAIL (
+    EMP_ID INT PRIMARY KEY,
+    NAME VARCHAR(100),
+    DEPT_ID INT FOREIGN KEY REFERENCES DEPARTMENT(DEPT_ID)
+);
+
+INSERT INTO DEPARTMENT VALUES (10, 'IT'), (11, 'HR');
+INSERT INTO EMPLOYEE_DETAIL VALUES (101, 'VRAJ', 10);
+
+-- 6.1 CREATE VIEW TO JOIN TABLES
+CREATE VIEW VW_EMPLOYEE_DEPT
+AS
+SELECT E.EMP_ID, E.NAME, D.DEPT_NAME
+FROM EMPLOYEE_DETAIL E
+JOIN DEPARTMENT D ON E.DEPT_ID = D.DEPT_ID;
+GO
+
+-- 6.2 AUTO INSERT INTO RELATED TABLES USING VIEW
+CREATE TRIGGER TR_VW_AUTO_INSERT
+ON VW_EMPLOYEE_DEPT
+INSTEAD OF INSERT
+AS
+BEGIN
+    INSERT INTO EMPLOYEE_DETAIL (EMP_ID, NAME, DEPT_ID)
+    SELECT I.EMP_ID, I.NAME, D.DEPT_ID
+    FROM inserted I
+    JOIN DEPARTMENT D ON I.DEPT_NAME = D.DEPT_NAME;
+END;
+GO
+
+INSERT INTO VW_EMPLOYEE_DEPT VALUES (103, 'JIMIT', 'IT');
+GO
+
+-- 6.3 AUTO DELETE USING VIEW
+CREATE TRIGGER TR_VW_AUTO_DELETE
+ON VW_EMPLOYEE_DEPT
+INSTEAD OF DELETE
+AS
+BEGIN
+    DELETE E
+    FROM EMPLOYEE_DETAIL E
+    JOIN deleted D ON E.EMP_ID = D.EMP_ID;
+END;
+GO
+
+DELETE FROM VW_EMPLOYEE_DEPT
+WHERE EMP_ID = 103;
+GO
+
+-- 6.4 AUTO UPDATE USING VIEW
+CREATE TRIGGER TR_VW_AUTO_UPDATE
+ON VW_EMPLOYEE_DEPT
+INSTEAD OF UPDATE
+AS
+BEGIN
+    UPDATE E
+    SET E.DEPT_ID = D.DEPT_ID
+    FROM inserted I
+    INNER JOIN EMPLOYEE_DETAIL E ON I.EMP_ID = E.EMP_ID
+    INNER JOIN DEPARTMENT D ON I.DEPT_NAME = D.DEPT_NAME;
+END;
+GO
+
+UPDATE VW_EMPLOYEE_DEPT
+SET DEPT_NAME = 'HR'
+WHERE EMP_ID = 101;
+GO
+
+-- =====================================================================
+-- 7. DATABASE & SERVER LEVEL RESTRICTIONS
+-- =====================================================================
+
+-- 7.1 PREVENT TABLE CREATION (DATABASE LEVEL)
+CREATE TRIGGER TR_DATABASE_BLOCK_CREATE_TABLE
+ON DATABASE
+FOR CREATE_TABLE
+AS
+BEGIN
+    PRINT 'ERROR: Table creation is restricted in this database!';
+    ROLLBACK TRANSACTION;
+END;
+GO
+
+-- 7.2 PREVENT TABLE CREATION (SERVER LEVEL)
+CREATE TRIGGER TR_SERVER_BLOCK_CREATE_TABLE
+ON ALL SERVER
+FOR CREATE_TABLE
+AS
+BEGIN
+    PRINT 'ERROR: Table creation is restricted on this server!';
+    ROLLBACK TRANSACTION;
+END;
+GO
+
+-- 7.3 PREVENT TABLE DROP (DATABASE LEVEL)
+CREATE TRIGGER TR_DATABASE_BLOCK_DROP_TABLE
+ON DATABASE
+FOR DROP_TABLE
+AS
+BEGIN
+    PRINT 'ERROR: Dropping tables is not allowed in this database!';
+    ROLLBACK TRANSACTION;
+END;
+GO
+
+-- 7.4 PREVENT TABLE DROP (SERVER LEVEL)
+CREATE TRIGGER TR_SERVER_BLOCK_DROP_TABLE
+ON ALL SERVER
+FOR DROP_TABLE
+AS
+BEGIN
+    PRINT 'ERROR: Dropping tables is not allowed on this server!';
+    ROLLBACK TRANSACTION;
+END;
+GO
+
+-- =====================================================================
+-- 8. TRIGGER MANAGEMENT COMMANDS
+-- =====================================================================
+-- DROP TRIGGER:     DROP TRIGGER TR_EMPLOYEE_UPDATE;
+-- DISABLE TRIGGER:  DISABLE TRIGGER TR_EMPLOYEE_UPDATE ON EMPLOYEE;
+-- ENABLE TRIGGER:   ENABLE TRIGGER TR_EMPLOYEE_UPDATE ON EMPLOYEE;
+
+SELECT * FROM SYS.TRIGGERS WHERE TYPE = 'U';
+SELECT * FROM SYS.TABLES WHERE TYPE = 'U';

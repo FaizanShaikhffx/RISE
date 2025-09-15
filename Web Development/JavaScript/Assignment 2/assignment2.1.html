@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assignment 2.1</title>
+</head>
+<style>
+  button{
+    background-color: black;
+    color: white;
+    border-style: none;
+    border-radius: 3px;
+    padding: 10px;
+  }
+  body{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+</style>
+<body>
+  
+  <p>Get intials of the names with . in between 2 initials</p>
+  <button onclick="getInitials()">Get Initials</button>
+  <p id="initials"></p>
+</body>
+<script>
+  function getInitials(){
+    console.log("Hi there")
+    let message = prompt("Enter Your Name");
+    let fullnameArray = message.split(" ");
+    let firstNameInitial = fullnameArray[0].charAt(0)
+    let secondNameInitial = fullnameArray[1].charAt(0)
+    document.getElementById('initials').innerHTML  = firstNameInitial+"."+secondNameInitial;
+  }
+</script>
+</html>
