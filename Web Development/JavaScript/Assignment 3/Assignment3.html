@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assignment 3</title>
+</head>
+<style>
+  button{
+    background-color: black;
+    color: white;
+    border-style: none;
+    border-radius: 3px;
+    padding: 10px;
+  }
+  body{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+</style>
+<body>
+  <p>You have an array of strings: ["apple", "banana", "kiwi", "grape", "blueberry"]. 
+    <br>
+    <br>
+Create a new array containing only the strings that have a length greater than 5.
+<br><br>
+Transform this filtered array into a new array where each string is capitalized.</p>
+<button onclick="generateArray()">Generate Array</button>
+<p id="originalString"></p>
+<p id="longString"></p>
+<p id="capitalLongString"></p>
+
+<script>
+  let fruits = ["apple", "banana", "kiwi", "grape", "blueberry"];
+  
+  //method 1
+  let fruitsWith5Length = [];
+   fruits.forEach((fruit)=>{
+    if(fruit.length > 5){
+      fruitsWith5Length.push(fruit);
+    }
+   })
+  
+   //method 2
+  //  let fruitsWith5Length = fruits.filter(fruit => fruit.length > 5);
+
+  // method 1
+  let uppercaseString  = [];
+  fruitsWith5Length.forEach((fruit)=>{
+    let upper = fruit.toString().toUpperCase();
+    uppercaseString.push(upper);
+  })
+
+  // method 2
+    // let uppercaseString = fruits.map(fruit => fruit.toUpperCase());
+
+  function generateArray(){
+    document.getElementById("originalString").innerHTML = "Original String : " + fruits;
+
+     document.getElementById("longString").innerHTML = "Long Strings : " + fruitsWith5Length;
+
+       document.getElementById("capitalLongString").innerHTML = "Capitalized Strings : " + uppercaseString;
+  }
+
+
+
+</script>
+</body>
+</html>
