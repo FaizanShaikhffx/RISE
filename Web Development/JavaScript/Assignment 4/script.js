@@ -14,8 +14,9 @@ function calculateDolphinsScore(DolphinScore){
     sum = sum + DolphinScore[i]; 
   }
 
-  averageDolphinScore = sum / DolphinScore.length; 
-  console.log(averageDolphinScore)
+  averageDolphinScore = (sum / (DolphinScore.length)); 
+  
+  return averageDolphinScore
 }
 
 
@@ -26,7 +27,7 @@ function calculateKoalaScore(KoalasScore){
     sum2 = sum2 + KoalasScore[i];
   }
   
-  averageKoalasScore = sum2/ KoalasScore.length;
+  averageKoalasScore = sum2 / KoalasScore.length;
 
   console.log(averageKoalasScore);
 
@@ -48,10 +49,7 @@ calculateDolphinsScore(DolphinScore);
 
 
 let result =  calculateDolphinsScore(DolphinScore);
-console.log(`Dolphins Score : ${result}`);
-console.log("Koalas Score :"+calculateKoalaScore(KoalasScore));
-
-// console.log(result)
+console.log(result); 
 
 
 

@@ -1,14 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HTML + CSS Assessment Cheat Sheet</title>
+<style>
+	body {font-family: system-ui, Arial, sans-serif; line-height: 1.4; max-width: 900px; margin: 24px auto; padding: 0 16px;}
+	h2 {margin: 20px 0 8px;}
+	code, kbd {background: #f4f4f4; padding: 2px 6px; border-radius: 4px;}
+	.grid {display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px;}
+	.card {border: 1px solid #e5e5e5; border-radius: 8px; padding: 12px; background: #fff;}
+	ul {margin: 0 0 8px 18px;}
+	.small {font-size: 13px; color: #444;}
+</style>
 </head>
 <body>
-  
-  <script src="script.js">
-    
-  </script>
+	<h1>HTML + CSS Quick Cheat Sheet</h1>
+
+	<h2>Essential HTML Topics</h2>
+	<div class="grid">
+		<div class="card">
+			<strong>Lists</strong>
+			<ul>
+				<li><code>ul</code>, <code>ol</code>, <code>li</code></li>
+				<li><code>dl</code>, <code>dt</code>, <code>dd</code></li>
+			</ul>
+		</div>
+		<div class="card">
+			<strong>Phrasing/Inline</strong>
+			<ul>
+				<li><code>em</code>, <code>strong</code>, <code>small</code>, <code>mark</code></li>
+				<li><code>abbr</code>, <code>q</code>, <code>cite</code>, <code>code</code>, <code>kbd</code></li>
+				<li><code>sup</code>, <code>sub</code>, <code>span</code></li>
+			</ul>
+		</div>
+		<div class="card">
+			<strong>Tables</strong>
+			<ul>
+				<li><code>table</code>, <code>caption</code></li>
+				<li><code>thead</code>, <code>tbody</code>, <code>tfoot</code></li>
+				<li><code>tr</code>, <code>th</code>, <code>td</code>, <code>colgroup</code>, <code>col</code></li>
+			</ul>
+		</div>
+		<div class="card">
+			<strong>Forms</strong>
+			<ul>
+				<li><code>form</code>, <code>label</code>, <code>input</code>, <code>textarea</code>, <code>select</code>, <code>option</code>, <code>fieldset</code>, <code>legend</code>, <code>button</code></li>
+			</ul>
+		</div>
+		<div class="card">
+			<strong>Media</strong>
+			<ul>
+				<li><code>img</code>, <code>audio</code>, <code>video</code></li>
+			</ul>
+		</div>
+	</div>
+
+	<h2>Must‑Know HTML Attributes</h2>
+	<div class="grid">
+		<div class="card">
+			<strong>Global</strong>
+			<ul>
+				<li><code>id</code>, <code>class</code>, <code>title</code>, <code>style</code></li>
+				<li><code>hidden</code>, <code>tabindex</code></li>
+			</ul>
+		</div>
+		<div class="card">
+			<strong>Links/Media</strong>
+			<ul>
+				<li><code>href</code>, <code>target</code> (links)</li>
+				<li><code>src</code>, <code>alt</code> (img)</li>
+				<li><code>controls</code>, <code>autoplay</code>, <code>loop</code>, <code>muted</code>, <code>poster</code> (audio/video)</li>
+				<li><code>width</code>, <code>height</code>, <code>loading="lazy"</code> (img)</li>
+			</ul>
+		</div>
+		<div class="card">
+			<strong>Tables</strong>
+			<ul>
+				<li><code>colspan</code>, <code>rowspan</code></li>
+				<li><code>scope</code> on <code>th</code> (e.g. <code>col</code>, <code>row</code>)</li>
+				<li><code>headers</code> (a11y)</li>
+			</ul>
+		</div>
+		<div class="card">
+			<strong>Form (tag)</strong>
+			<ul>
+				<li><code>action</code>, <code>method</code>, <code>enctype</code></li>
+				<li><code>novalidate</code>, <code>autocomplete</code></li>
+			</ul>
+		</div>
+		<div class="card">
+			<strong>Inputs</strong>
+			<ul>
+				<li><code>type</code>, <code>name</code>, <code>value</code></li>
+				<li><code>placeholder</code>, <code>required</code>, <code>readonly</code>, <code>disabled</code></li>
+				<li><code>min</code>, <code>max</code>, <code>step</code>, <code>minlength</code>, <code>maxlength</code>, <code>pattern</code></li>
+				<li><code>checked</code> (radio/checkbox), <code>multiple</code> (file/select), <code>accept</code> (file)</li>
+				<li><code>for</code> on <code>label</code> → input <code>id</code></li>
+			</ul>
+		</div>
+	</div>
+
+	<h2>Core CSS Properties</h2>
+	<div class="grid">
+		<div class="card">
+			<strong>Text/Font</strong>
+			<ul>
+				<li><code>color</code>, <code>font-size</code>, <code>font-weight</code>, <code>font-style</code></li>
+				<li><code>text-align</code>, <code>text-decoration</code>, <code>line-height</code></li>
+			</ul>
+		</div>
+		<div class="card">
+			<strong>Box Model</strong>
+			<ul>
+				<li><code>margin</code>, <code>padding</code>, <code>border</code>, <code>box-sizing</code></li>
+			</ul>
+		</div>
+		<div class="card">
+			<strong>Backgrounds</strong>
+			<ul>
+				<li><code>background-color</code>, <code>background-image</code></li>
+				<li><code>background-size</code>, <code>background-repeat</code>, <code>background-position</code></li>
+			</ul>
+		</div>
+		<div class="card">
+			<strong>Display/Layout</strong>
+			<ul>
+				<li><code>display</code> (block/inline/inline-block/flex/grid)</li>
+				<li><code>position</code> (static/relative/absolute/fixed/sticky)</li>
+				<li><code>top/right/bottom/left</code>, <code>z-index</code></li>
+			</ul>
+		</div>
+		<div class="card">
+			<strong>Sizing/Other</strong>
+			<ul>
+				<li><code>width</code>, <code>height</code>, <code>max-width</code></li>
+				<li><code>overflow</code>, <code>opacity</code>, <code>cursor</code></li>
+			</ul>
+		</div>
+	</div>
+
+	<p class="small">
+		Tip: Tables me <code>th scope</code>, Forms me <code>label for</code> ↔ <code>input id</code>, Media me <code>alt</code>/<code>controls</code> na bhoolna!
+	</p>
 </body>
 </html>

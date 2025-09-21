@@ -22,7 +22,6 @@ class Child : Parent
   public override string this[int index]
   {
     get {
-      Console.WriteLine("Child");
        return "Dericed : " + base[index];
     }
     set
