@@ -1,8 +1,17 @@
-let a = "Hello".split("")
-// console.log(a); 
+let arr = [10, 20, 30, 40];
 
-let arr = [1, 2, 3, 4, 5];
-arr = arr.slice(1, 3)
-console.log(arr)
+// arr.unshift(5); 
+
+// console.log(arr.includes(40)); 
+
+// arr.forEach((item)=>(
+//   console.log(item * 2)
+// ))
 
 
+
+
+
+let reducedArray = arr.reduce((acc, curr) => acc + curr, 0); 
+
+console.log(reducedArray);
