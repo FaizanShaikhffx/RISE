@@ -1,39 +1,35 @@
 ﻿using System;
+using System.Data.SqlTypes;
 
-public delegate void MyDelegate(string name); 
+public delegate int MathOperation(int a, int b); 
 
 
-public class ClassA
-{
-    public static void MethodA(string message)
-    {
-        Console.WriteLine("Called ClassA.MethodA() with parameter: " + message);
-    }
-}
 
-public class ClassB
-{
-    public static void MethodB(string message)
-    {
-        Console.WriteLine("Called ClassB.MethodB() with parameter: " + message);
-    }
-}
+
 class Program
 {
-  static void InvokeDelegate(MyDelegate del) // MyDelegate type parameter
-  {
-      del("Hello World");
-  }
 
-  static void Main(string[] args)
-  {
-    MyDelegate del = ClassA.MethodA;
-        InvokeDelegate(del);
+    public static int Add(int a, int b)
+    {
+        return a + b;
+    }
 
-        del = ClassB.MethodB;
-        InvokeDelegate(del);
+    public static int Multiply(int a, int b)
+    {
+        return a * b; 
+    }
 
-        del = (string msg) => Console.WriteLine("Called lambda expression: " + msg);
-        InvokeDelegate(del);
-  }
+
+
+    // static void Main(string[] args)
+    // {
+    //     MathOperation add = new MathOperation(Add);
+    //     int result = add.Invoke(10, 20);
+    //     Console.WriteLine(result);
+
+    //     MathOperation mul = new MathOperation(Multiply);
+    //     int multiplication = mul(10, 10);
+    //     Console.WriteLine(multiplication); 
+
+    // }
 }

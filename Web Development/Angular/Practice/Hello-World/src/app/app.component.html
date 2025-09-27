@@ -1,0 +1,17 @@
+<h2>My To-Do List</h2>
+
+<input 
+  #todoInput
+  placeholder="Add a new to-do and press Enter" 
+  (keyup.enter)="addTodo($event)">
+
+<ul *ngIf="!isLoading; else loadingTemplate">
+  <li *ngFor="let todo of todos; let i = index" [class.completed]="todo.completed">
+    <span>{{ i + 1 }}. {{ todo.title }}</span>
+    <button (click)="completeLater(i)">Complete in 2s</button>
+  </li>
+</ul>
+
+<ng-template #loadingTemplate>
+  <p>Loading initial to-dos...</p>
+</ng-template>
