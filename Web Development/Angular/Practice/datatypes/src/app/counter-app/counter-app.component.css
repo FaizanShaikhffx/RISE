@@ -1,0 +1,16 @@
+.btn{
+  padding: 10px;
+  border-style: none;
+  color: white;
+  border: 1px solid gainsboro;
+  margin: 15px;
+}
+.bg-red{
+  background-color: red;
+}
+.bg-black{
+  background-color: black;
+}
+.bg-green{
+  background-color: green;
+}
