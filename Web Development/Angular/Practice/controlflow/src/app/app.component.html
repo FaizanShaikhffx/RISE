@@ -1,0 +1,14 @@
+<!-- <app-loops></app-loops> -->
+<h2>My Tasks</h2>
+
+<ul>
+  @if (tasks.length === 0) {
+      <p>Hooray! No tasks left.</p>
+  }else{
+    @for (task of tasks; track task.id) {
+      <li>{{ task.title }}</li>
+    }
+  }
+</ul>
+
+<button (click)="clearTasks()">Clear Tasks</button>

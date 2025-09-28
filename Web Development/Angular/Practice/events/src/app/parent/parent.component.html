@@ -1,0 +1,4 @@
+<h2>Parent Component</h2>
+<p>Status: {{ messageFromChild || 'Waiting for child event...' }}</p>
+
+<app-child (notify)="onChildNotify($event)"></app-child>
