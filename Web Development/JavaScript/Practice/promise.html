@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promise</title>
+</head>
+<body>
+
+
+  <button onclick="prepareFood()">Click Me</button>
+  <div id="data">
+
+  </div>
+
+  <script>
+
+    function chopVegetables(){
+      return new Promise((resolve, reject)=>{
+        setTimeout(()=>{
+          const success = true; 
+          if(success){
+            resolve("Chopped Vegetable");
+           
+          }else{
+            reject("Something went wrong"); 
+          }
+        }, 1000)
+      })
+    }
+    
+ 
+    function cookMeal(){
+      return new Promise((resolve, reject)=>{
+        setTimeout(()=>{
+          const success = true; 
+          if(success){
+            resolve("Cooked The Meal");
+          }else{
+            reject("Something went wrong"); 
+          }
+        }, 1500)
+      })
+    }
+
+    function setTable(){
+      return new Promise(function(resolve, reject){
+        // setTimeout(()=>{
+        //   const success = true; 
+        //   if(success){
+        //     resolve("Table is set");
+        //   }else{
+        //     reject("Something went wrong"); 
+        //   }
+        // }, 1000)
+        setTimeout(function(){
+
+        }, 5000)
+      })
+    }
+
+    // async function prepareFood(){
+      
+    //   let chop  = await chopVegetables();
+    //   let res = document.createElement('p')
+    //   res.innerHTML = chop; 
+    //   let allData = document.getElementById("data")
+    //   allData.appendChild(res); 
+    //   console.log(chop); 
+
+
+    //   let cook  = await cookMeal(); 
+    //   let res2 = document.createElement('p')
+    //   res2.innerHTML = cook; 
+    //   allData.appendChild(res2);
+    //   console.log(cook); 
+
+    //   let set  = await setTable(); 
+    //   let res3 = document.createElement('p')
+    //   res3.innerHTML = `${set} <br> <br> Dinner is ready!`; 
+    //   allData.appendChild(res3);
+    //   console.log(set); 
+    // }
+
+    
+
+let data ;
+
+
+function fetchData() {
+  return new Promise((resolve, reject)=>{
+    setTimeout(() => {
+      resolve("Hello from server!");
+    }, 1000);
+  })
+}
+
+
+
+fetchData()
+.then(data=>console.log(data))
+.catch((error)=> console.log(error))
+
+
+
+  </script>
+</body>
+</html>
