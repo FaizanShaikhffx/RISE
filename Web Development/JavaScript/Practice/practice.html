@@ -38,18 +38,37 @@
       orderItems.trim(); 
       
       
-
+      let newArray = [];
       
-      let firstLetter = customerName.charAt(0).toUpperCase();
+      let firstLetterForName = customerName.charAt(0).toUpperCase();
     
       let itemsArray = orderItems.split(",")
       
-      for(let i = 0; i<itemsArray.length; i++){
-         itemsArray[i].toString().charAt[i] = itemsArray[i].charAt(i).toString().toUpperCase(); 
-      }
+
+      
+      let firstLetter = 0; 
+      let data = 0;
+
+      itemsArray.map((item)=>{
+        console.log(`${item}`);
+        item = item.trim(); 
+        console.log(`${item}`);
+       let firstLetter = item.charAt(0).toUpperCase(); 
+       let data = item.slice(1);2
+
+      let wholeWord = firstLetter + data
+      newArray.push(wholeWord)
+     })
+
+     console.log(newArray);
+    // itemsArray.forEach((item)=>{
+
+    // })
+
+     console.log(newArray);
       
       let item = document.createElement("p");
-      item.innerHTML = `Hello ${firstLetter+customerName.slice(1, customerName.length)} Your order ${itemsArray} will be ready soon.`
+      item.innerHTML = `Hello ${firstLetterForName+customerName.slice(1, customerName.length)} Your order ${newArray} will be ready soon.`
 
 
       document.getElementById("orders").appendChild(item); 
