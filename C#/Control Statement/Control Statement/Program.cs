@@ -1,5 +1,5 @@
 ﻿// int n1, n2;
-// n1 = n2 = 10;
+// n1 = n2 = 15;
 
 // if (n1 > n2)
 // {
@@ -52,13 +52,13 @@
 
 using System.Numerics;
 
-int n;
-System.Console.WriteLine("Table Of : ");
-n = int.Parse(Console.ReadLine());
-string s = "";
-for (int i = 1; i <= 10; i++)
-{ 
-  s = s + n+" x "+i+" = "+(n*i)+"\n"; 
-  System.Console.WriteLine(s);
-}
+// int n;
+// System.Console.WriteLine("Table Of : ");
+// n = int.Parse(Console.ReadLine());
+// string s = "";
+// for (int i = 1; i <= 10; i++)
+// { 
+//   s = s + n+" x "+i+" = "+(n*i)+"\n"; 
+//   System.Console.WriteLine(s);
+// }
 

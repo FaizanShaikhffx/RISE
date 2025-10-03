@@ -37,10 +37,10 @@
 // Console.WriteLine(c); 
 
 
-int n1 = 10;
-int n2 = 10;
+// int n1 = 10;
+// int n2 = 10;
 
-Console.WriteLine("The Sum of " + n1 + "and " + n2 + " is " + (n1 + n2));
+// Console.WriteLine("The Sum of " + n1 + "and " + n2 + " is " + (n1 + n2));
 
 
 
