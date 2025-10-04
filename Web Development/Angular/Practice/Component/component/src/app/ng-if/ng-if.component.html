@@ -1,0 +1,45 @@
+<h1>Learning ngIf directives</h1>
+<!-- <h2 *ngIf="isLoggedIn">Welcome You are logged in</h2> -->
+
+<!-- <div *ngIf="fruits.length > 4; else fallback">
+  <ul>
+    <li *ngFor="let fruit of fruits" >{{fruit}}</li>
+  </ul>
+</div>
+
+<ng-template #fallback>
+  <p>No fruits are there</p>
+</ng-template> -->
+
+<!-- <ng-container *ngIf="user.name.length > 1; then userBlock; else guestBlock">
+
+</ng-container>
+
+<ng-template #userBlock>
+  <p>{{user.name}}</p>
+</ng-template>
+
+<ng-template #guestBlock>
+  <p>Please Log in to continue</p>
+</ng-template> -->
+
+<!-- <button *ngIf="isAdmin;then fallToAdmin;  else fallback">You can Delete</button>
+
+<ng-template #fallToAdmin>
+  <p>You are Admin</p>
+</ng-template>
+
+<ng-template #fallback>
+  <p>You are not admin get out</p>
+</ng-template> -->
+
+<!-- <ul>
+  <li *ngFor="let phone of phones">{{phone}}</li>
+</ul> -->
+
+<div [ngSwitch]="color">
+  <p *ngSwitchCase="'red'">Red</p>
+  <p *ngSwitchCase="'yellow'">Yellow</p>
+  <p *ngSwitchCase="'Pink'">Pink</p>
+  <p *ngSwitchDefault>I am Default</p>
+</div>
