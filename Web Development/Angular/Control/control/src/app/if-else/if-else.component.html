@@ -1,0 +1,10 @@
+<h1>Voting System</h1>
+<input type="number" placeholder="Enter Age"  [(ngModel)]="age">
+<h2 >Your Age : {{age}}</h2>
+<!-- <div *ngIf="age !== null">
+  <h1 *ngIf="age >= 18">You are Eligible for Vote</h1>
+  <h1 *ngIf="age < 18 && age >= 0">You are Not Eligible for Vote</h1>
+</div> -->
+
+<h1 *ngFor="let name of user">{{name.name}} | {{name.id}}</h1>
+

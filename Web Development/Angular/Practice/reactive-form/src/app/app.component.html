@@ -1,0 +1,15 @@
+<h1>Form grouping Reactive Forms</h1>
+<form action="" [formGroup]="profileForm" (ngSubmit)="onSubmit()">
+  <input type="text" placeholder="Enter Name" formControlName="name">
+  <div>
+    <span class="error" *ngIf="name?.invalid && (name?.dirty || name?.touched)" >Name is Required</span>
+  </div>
+  <br><br>
+  <input type="text" placeholder="Enter password" formControlName="password">
+  <br><br>
+  <input type="text" placeholder="Enter Email" formControlName="email">
+  <br><br>
+
+  <button>Submit</button>
+</form>
+

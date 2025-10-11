@@ -12,13 +12,11 @@ import { CommonModule } from '@angular/common';
 
 export class TemplateFormComponent {
   userObj: any = {
-    firstName: '',
-    lastName: '',
-    userName: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    isTermsAgree: false
+    name: '',
+    email: '',
+    password: '',
+    age: null,
+    gender: '',
   }
 
   onSave(){

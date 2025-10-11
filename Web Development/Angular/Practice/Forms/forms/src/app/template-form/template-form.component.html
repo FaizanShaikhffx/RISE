@@ -4,8 +4,8 @@
     <hr>
 
     <div>
-      <label for="firstName">First Name <span>*</span></label>
-      <input type="text" name="firstName" #fname="ngModel" minlength="3" required [(ngModel)]="userObj.firstName" placeholder="Enter Name">
+      <label for="name">Name: <span>*</span></label>
+      <input type="text" name="name" #fname="ngModel" minlength="3" required [(ngModel)]="userObj.name" placeholder="Enter Name">
       <div *ngIf="fname.invalid && (fname.dirty || fname.touched)" [ngStyle]="{'color': 'red'}">
         <p  *ngIf="fname.errors?.['required']">This is Required</p>
         <p  *ngIf="fname.errors?.['minlength']">min length 3</p>
@@ -14,19 +14,36 @@
 
     <br><br>
     
-    <label for="firstName">Last Name</label>
-    <input type="text" name="lastName" #lName="ngModel" minlength="4" required [(ngModel)]="userObj.lastName" placeholder="Enter Name">
-    <div *ngIf="lName.invalid && lName.dirty && lName.touched" [ngStyle]="{'color': 'red'}">
-      <p *ngIf="lName.errors?.['required']">This is required</p>
-      <p *ngIf="lName.errors?.['minlength']"  >min length 4 character</p>
+    <label for="email">Email:</label>
+    <input type="text" name="email" #emailM="ngModel" minlength="6" required [(ngModel)]="userObj.email" placeholder="Enter Email">
+    <div *ngIf="emailM.invalid && (emailM.dirty || emailM.touched)" [ngStyle]="{'color': 'red'}">
+      <p *ngIf="emailM.errors?.['required']">This is required</p>
+      <p *ngIf="emailM.errors?.['minlength']"  >min length 6 character</p>
 
     </div>
     <br><br>
+
     
-    <label for="firstName">UserName</label>
-    <input type="text" name="userName" [(ngModel)]="userObj.userName" placeholder="Enter Name">
+    
+    <label for="password">Password</label>
+    <input type="text" name="password" #pass="ngModel" minlength="5" required [(ngModel)]="userObj.email"  placeholder="Enter Password" >
+    <div *ngIf="pass.invalid && (pass.dirty || pass.touched)" [ngStyle]="{'color': 'red'}">
+      <p *ngIf="pass.errors?.['required']" >Password is required</p>
+      <p *ngIf="pass.errors?.['minlength']" >Min length 5 character</p>
+    </div>
+
     <br><br>
 
+    <label for="age">Age:</label>
+    <input type="number" name="age" #age="ngModel" [(ngModel)]="userObj.age" required placeholder="Enter Age" min="18" max="60">
+    <div *ngIf="age.invalid && (age.dirty || age.touched)" [ngStyle]="{'color': 'red'}">
+      <p *ngIf="age.errors?.['required']">Age is required</p>
+      <p *ngIf="age.errors?.['min']" >Minimum age is 18</p>
+      <p *ngIf="age.errors?.['max']" >Minimum age is 60</p>
+    </div>
+
+
+    <br><br>
     <button type="button" [disabled]="form.invalid" (click)="onSave()">Submit Form </button>
   </form>
 </div>

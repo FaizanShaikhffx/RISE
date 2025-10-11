@@ -4,10 +4,6 @@ interface ICar
 {
   public void showCar();
 
-  public void getCar(string name)
-  {
-    Console.WriteLine(name+ " from interface"); 
-  }
 
 
 }
@@ -15,7 +11,6 @@ interface ICar
 class Program : ICar
 {
 
- 
   public void showCar()
   {
     Console.WriteLine("I am from Interface");
@@ -23,9 +18,9 @@ class Program : ICar
   public static void Main(string[] args)
   {
     
-    ICar c1 = new Program();
+    Program c1 = new Program();
 
-    c1.getCar("Mercedez"); 
+    c1.showCar(); 
 
   }
 }
