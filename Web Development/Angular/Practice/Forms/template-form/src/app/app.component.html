@@ -1,0 +1,95 @@
+  <form #userForm="ngForm">
+    <div>
+      <label for="name">Name</label>
+      <input type="text"
+        id="name"
+        name="name"
+        required
+        minlength="5"
+        [(ngModel)]="username"
+        #name="ngModel"
+      >
+
+      <div *ngIf="name.invalid && (name.dirty || name.touched)" style="color: red; border-color: red; ">
+        <div *ngIf="name.errors?.['required']">
+          Name is Required
+        </div>
+        <div *ngIf="name.errors?.['minlength']">
+            Name must be atleast 5 character long
+        </div>
+      </div>
+
+      <br><br>
+
+      <label for="email">Email:</label>
+      <input type="text"
+        id="email"
+        required
+        minlength="6"
+        name="email"
+        #emailModel="ngModel"
+        [(ngModel)]="email"
+      >
+
+      <div *ngIf="emailModel?.invalid && (emailModel?.dirty || emailModel?.touched)" style="color: red;">
+        <div *ngIf="emailModel.errors?.['required']">
+          Email is Required
+        </div>
+        <div *ngIf="emailModel.errors?.['minlength']">
+            Email must be atleast 6 character long
+        </div>
+
+      </div>
+
+      <br><br>
+
+      <label for="password">Password:</label>
+      <input type="text"
+        id="password"
+        required
+        minlength="4"
+        name="password"
+        #passwordModel="ngModel"
+        [(ngModel)]="password"
+      >
+
+      <div *ngIf="passwordModel?.invalid && (passwordModel?.dirty || passwordModel?.touched)" style="color: red;">
+        <div *ngIf="passwordModel.errors?.['required']">
+          password is Required
+        </div>
+        <div *ngIf="passwordModel.errors?.['minlength']">
+            password must be atleast 4 character long
+        </div>
+
+      </div>
+
+      <br><br>
+
+      <div>
+        <select name="gender" id="gender" required [(ngModel)]="gender" #genderModel="ngModel">
+          <option value="">Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+      </div>
+
+      <div *ngIf="genderModel.invalid && (genderModel.dirty || genderModel.touched)" style="color: red;">
+        <div>Gender is required</div>
+
+      </div>
+
+      <br><br>
+
+      <label>Tick this checkbox to proceed further</label>
+      <input type="checkbox" [(ngModel)]="check" #checkModel="ngModel" required>
+      <div *ngIf="checkModel?.invalid && (checkModel.dirty || checkModel.touched)" style="color: red;">
+        <div *ngIf="checkModel.errors?.['required']">
+            Field required
+        </div>
+      </div>
+      <br><br>
+
+      <button type="submit" [disabled]="userForm.invalid" >Submit</button>
+
+    </div>
+  </form>

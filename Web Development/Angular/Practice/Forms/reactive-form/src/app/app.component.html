@@ -1,0 +1,70 @@
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+
+  <div>
+    <label for="name">Name</label>
+    <input type="text" id="name"  formControlName="name">
+  </div>
+
+  <div *ngIf="Name.invalid && (Name.dirty || Name.touched)" style="color: red;">
+    <div *ngIf="Name.errors?.['required']">
+      Name is Required
+    </div>
+    <div *ngIf="Name.errors?.['minlength']">
+      MInimum 5 chacter is reqired
+    </div>
+  </div>
+  <br><br>
+  
+  <div>
+    <label for="age">Age</label>
+    <input type="text" id="age" formControlName="age">
+  </div>
+  
+  <div *ngIf="Age.invalid && (Age.dirty || Age.touched)" style="color: red;">
+    <div *ngIf="Age.errors?.['required']">
+      Name is required
+    </div>
+    <div *ngIf="Age.errors?.['min']">
+      Minimum age required 18
+    </div>
+    <div *ngIf="Age.errors?.['max']">
+      Maximum age required 65
+    </div>
+  </div>
+
+ <br><br>
+
+  <div>
+    <label for="age">Password</label>
+    <input type="text" id="password" formControlName="password">
+  </div>
+  
+  <div *ngIf="Password.invalid && (Password.dirty || Password.touched)" style="color: red;">
+    <div *ngIf="Password.errors?.['required']">
+      Name is required
+    </div>
+    <div *ngIf="Password.errors?.['minlength']">
+      Minimum 5 character required
+    </div>
+    
+  </div>
+
+  <br><br>
+
+  <div>
+    <select formControlName="gender"  >
+      <option value="">Select Gender</option>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
+  </div>
+
+  <div *ngIf="Gender.invalid && (Gender.dirty || Gender.touched)" style="color: red;">
+    <div *ngIf=""></div>
+  </div>
+
+  <br><br>
+
+  <button [disabled]="userForm.invalid" >Submit</button>
+
+</form>
