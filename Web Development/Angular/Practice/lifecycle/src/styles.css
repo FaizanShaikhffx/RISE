@@ -1,0 +1,12 @@
+/* You can add global styles to this file, and also import other style files */
+body{
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+button{
+  background-color: black;
+  color: white;
+  border-style: none;
+  padding: 5px;
+  border-radius: 5px;
+}
