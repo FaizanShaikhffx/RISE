@@ -129,9 +129,9 @@
 
 
 
-class Program
+public  class Program
 {
-  static void Main()
+  public static void Main(string[] args)
   {
     List<Product> products = new List<Product>
         {
@@ -147,21 +147,28 @@ class Program
             new Product { Id = 10, Name = "Tablet", Price = 300, Category = "Electronics" }
         };
 
+        List<Employee> emp = new List<Employee>
+    {
+      new Employee {Id = 1, Name = "Faizan" },
+      new Employee {Id = 2, Name = "Rohan" },
+      new Employee {Id = 3, Name = "Pablo" },
+    };
+
+
+    var result = products.Join(emp);
+
+
+
+
     
-    
-    var result = products.GroupBy(p => p.Category);
-
-
-
 
     foreach (var group in result)
     {
-      Console.WriteLine($"Category : {group.Key} | Count: {group.Count()}");
-      foreach(var item in group)
+      Console.WriteLine("Category: " + group.Key +" | "+ group.Count());
+      foreach (var item in group)
       {
-        Console.WriteLine($" Id: {item.Id}, Name = {item.Name}, Price: {item.Price}, Category: {item.Category} ");
+        Console.WriteLine($"Name: {item.Name} | Price: {item.Price} | Category: {item.Category}"); 
       }
-
     }
 
 
