@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assessment 2</title>
+  <style>
+  body{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  button{
+    background-color: black;
+    color: white;
+    border-style: none;
+    padding: 10px;
+    border-radius: 4px;
+  }
+  button:hover{
+        background-color: rgb(57, 56, 56);
+  }
+</style>
+</head>
+<body>
+  <h1>Morning Routine Simulator</h1>
+  <button onclick="callFunction()">Click Me</button>
+
+  <div id="tasks">
+
+  </div>
+  <script>
+    function brushTeeth(){
+
+      return new Promise((resolve, reject)=>{
+        setTimeout(()=>{
+        console.log("Brushed teeth");
+         resolve("Brushed teeth");
+        }, 1000)
+      })
+    }
+    
+    function haveBreakfast(){
+      return new Promise((resolve, reject)=>{
+      setTimeout(()=>{
+        console.log("Had breakfast")
+        resolve("Had breakfast")
+      }, 1500)
+      })
+
+    }
+    function goToWork(){
+      return new Promise((resolve, reject)=>{
+      setTimeout(()=>{
+        console.log("Reached Office")
+        resolve("Reached Office </br> </br> All tasks done!")
+      }, 1000)
+      })
+    }
+
+    function handleDom(data){
+      let p = document.createElement("p");
+      p.innerHTML = data; 
+      let tasks = document.getElementById("tasks")
+      tasks.appendChild(p);
+    }
+
+    async function callFunction(){
+
+     
+        let brushTeethFunction = await brushTeeth(); 
+        handleDom(brushTeethFunction);
+        let haveBreakfastFunction = await haveBreakfast(); 
+        handleDom(haveBreakfastFunction);
+        
+        let goToWorkFunction = await goToWork(); 
+        handleDom(goToWorkFunction);
+        
+    
+    }
+
+  </script>
+</body>
+</html>

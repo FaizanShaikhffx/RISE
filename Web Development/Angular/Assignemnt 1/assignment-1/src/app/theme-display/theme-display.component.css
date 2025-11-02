@@ -1,0 +1,17 @@
+.theme-box {
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  margin-top: 10px;
+  color: white;
+}
+
+.light {
+  background-color: #f4f4f4;
+  color: #222;
+}
+
+.dark {
+  background-color: #222;
+  color: #f4f4f4;
+}
