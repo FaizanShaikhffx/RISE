@@ -38,6 +38,7 @@ namespace GuestHouseBooking.Controllers
                     Name = g.Name,
                     Location = g.Location,
                     Description = g.Description,
+                    ImageUrl = g.ImageUrl
                 }).ToListAsync();
         }
 
@@ -52,6 +53,7 @@ namespace GuestHouseBooking.Controllers
                 Name = dto.Name,
                 Location = dto.Location,
                 Description = dto.Description,
+                ImageUrl = dto.ImageUrl,
                 CreatedBy = currentUserId,
                 CreatedDate = DateTime.UtcNow
             };
@@ -67,6 +69,7 @@ namespace GuestHouseBooking.Controllers
                 GuestHouseId = guestHouse.GuestHouseId,
                 Name = guestHouse.Name,
                 Location = guestHouse.Location,
+
                 Description = guestHouse.Description
             };
 
@@ -114,6 +117,7 @@ namespace GuestHouseBooking.Controllers
             guestHouse.Name = dto.Name;
             guestHouse.Location = dto.Location;
             guestHouse.Description = dto.Description;
+            guestHouse.ImageUrl = dto.ImageUrl;
             guestHouse.ModifiedBy = currentUserId;
             guestHouse.ModifiedDate = DateTime.UtcNow;
 

@@ -38,7 +38,7 @@ namespace GuestHouseBooking.Controllers
                 return Unauthorized("Invalid Credentials.");
             }
 
-            if (user.IsActive) {
+            if (!   user.IsActive) {
                 return Unauthorized("Account is inactive.");
             }
 

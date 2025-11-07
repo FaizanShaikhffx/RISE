@@ -1,0 +1,205 @@
+
+
+# 🔒 Sensitive files
+*.env
+.env.*
+*.secret
+*.key
+*.pem
+*.pfx
+*.cer
+*.crt
+*.jks
+*.db
+*.sqlite
+*.bak
+*.log
+*.config.local
+*.settings
+secrets.json
+
+# 🐍 Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+*.whl
+*.coverage
+.cache/
+.pytest_cache/
+*.ipynb_checkpoints
+
+# ☕ Java
+*.class
+*.jar
+*.war
+*.ear
+*.iml
+*.log
+target/
+build/
+out/
+
+# 🧠 C#
+*.dll
+*.exe
+*.pdb
+*.obj
+*.cache
+*.csproj.user
+*.suo
+*.user
+*.vs/
+bin/
+obj/
+TestResults/
+Practice.cs
+
+
+# 💻 C++
+*.o
+*.obj
+*.exe
+*.out
+*.gch
+*.log
+*.a
+*.so
+*.dSYM/
+*.vcxproj.user
+*.sln
+
+# 🧪 SQL
+*.sql.bak
+*.mdf
+*.ldf
+*.db
+
+# 🌐 Node.js (MERN/MEAN/React/Angular)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+dist/
+build/
+coverage/
+.next/
+.nuxt/
+out/
+*.tsbuildinfo
+
+# ⚙️ Dotnet & Angular
+*.angular/
+.angular/
+.angular/cache/
+.angular/config.json
+.angular/webpack/
+*.tsbuildinfo
+*.vs/
+*.vscode/
+*.user
+*.suo
+src/environments/environment.prod.ts
+src/environments/environment.ts
+*.env
+.env.*
+*.secret
+*.key
+*.pem
+*.pfx
+*.config.local
+*.settings
+secrets.json
+.angular/
+.angular/cache/
+*.tsbuildinfo
+
+# 📦 Package managers
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# 🧪 Testing & Coverage
+coverage/
+.nyc_output/
+jest.config.js
+*.spec.js
+*.spec.ts
+
+# 🧰 IDEs & Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+*.tmp
+*.orig
+*.rej
+
+# 📸 OS & Misc
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+*.tmp
+*.bak
+*.old
+*.orig
+*.rej
+
+# 🧪 Git
+# .gitignore
+.gitattributes
+.gitmodules
+
+
+# User secrets (used with dotnet user-secrets)
+**/secrets.json
+
+# Environment-specific settings
+appsettings.*.json
+!appsettings.Development.json  # Optional: keep dev settings if safe
+
+# Azure secrets
+*.azurekeyvault.json
+
+# Local database files
+*.mdf
+*.ldf
+*.sqlite
+*.db
+
+# Entity Framework migrations (optional if sensitive)
+Migrations/
+
+# Token or credential files
+*.pem
+*.key
+*.crt
+*.pfx
+*.env
+.env.*
+
+# IDE and build artifacts
+.vscode/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Logs and diagnostics
+*.log
+logs/
+*.dmp
+
+# OS-specific
+Thumbs.db
+.DS_Store
+
+# Backup and temp files
+*.bak
+*.tmp
+*.swp
