@@ -160,7 +160,10 @@ desktop.ini
 
 # Environment-specific settings
 appsettings.*.json
-!appsettings.Development.json  # Optional: keep dev settings if safe
+!appsettings.Development.json  
+
+# Optional: keep dev settings if safe
+appsettings.json
 
 # Azure secrets
 *.azurekeyvault.json
