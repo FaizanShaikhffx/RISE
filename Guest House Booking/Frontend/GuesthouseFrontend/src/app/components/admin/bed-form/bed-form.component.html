@@ -1,0 +1,40 @@
+<div class="container mx-auto p-4 max-w-2xl">
+  <h1 class="text-3xl font-bold mb-4">
+    {{ isEditMode ? 'Edit Bed' : 'Create Bed' }}
+  </h1>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="bg-white p-6 rounded shadow-md border">
+    
+    <div class="mb-4">
+      <label for="roomId" class="block text-gray-700 font-bold mb-2">Room</label>
+      <select id="roomId" formControlName="roomId" 
+              class="w-full px-3 py-2 border rounded"
+              [class.border-red-500]="form.get('roomId')?.invalid && form.get('roomId')?.touched">
+        <option [value]="null" disabled>Select a Room</option>
+        <option *ngFor="let room of rooms" [value]="room.roomId">
+          {{ room.roomName }} (ID: {{ room.roomId }})
+        </option>
+      </select>
+    </div>
+
+    <div class="mb-4">
+      <label for="bedNumber" class="block text-gray-700 font-bold mb-2">Bed Number</label>
+      <input type="text" id="bedNumber" formControlName="bedNumber"
+             class="w-full px-3 py-2 border rounded"
+             [class.border-red-500]="form.get('bedNumber')?.invalid && form.get('bedNumber')?.touched">
+    </div>
+
+    <div class="flex items-center space-x-4">
+      <button type="submit" [disabled]="form.invalid"
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:bg-gray-400">
+        {{ isEditMode ? 'Update' : 'Create' }}
+      </button>
+
+      <button type="button" (click)="onCancel()"
+              class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+        Cancel
+      </button>
+    </div>
+
+  </form>
+</div>

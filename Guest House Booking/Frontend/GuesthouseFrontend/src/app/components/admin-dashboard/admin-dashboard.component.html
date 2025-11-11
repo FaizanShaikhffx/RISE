@@ -1,0 +1,65 @@
+<div class="container mx-auto p-6">
+  <div class="mb-8">
+    <h1 class="text-4xl font-extrabold text-gray-800">Admin Dashboard</h1>
+    <p class="text-xl text-gray-500 mt-2">Welcome back, <span class="font-bold text-gray-700">{{ adminName }}</span>!</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+    
+    <div class="bg-white p-6 rounded-lg shadow-xl border border-gray-200">
+      <div class="flex items-center">
+        <div class="bg-yellow-100 p-3 rounded-full">
+          <svg class="w-8 h-8 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm text-gray-500 font-medium">Pending Bookings</p>
+          <p class="text-3xl font-bold text-gray-800">{{ pendingBookingCount }}</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-lg shadow-xl border border-gray-200">
+      <div class="flex items-center">
+        <div class="bg-green-100 p-3 rounded-full">
+          <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <div class="ml-4">
+          <p class="text-sm text-gray-500 font-medium">Total Bookings</p>
+          <p class="text-3xl font-bold text-gray-800">{{ totalBookings }}</p>
+        </div>
+      </div>
+    </div>
+
+    </div>
+
+  <div>
+    <h2 class="text-2xl font-bold text-gray-700 mb-4">Management Links</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+      <a routerLink="/admin/bookings" class="block p-6 bg-white rounded-lg shadow-lg hover:shadow-2xl hover:bg-gray-50 transition border border-gray-200">
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">Manage Bookings</h3>
+        <p class="text-gray-600">Approve or reject all user booking requests.</p>
+      </a>
+
+      <a routerLink="/admin/guesthouses" class="block p-6 bg-white rounded-lg shadow-lg hover:shadow-2xl hover:bg-gray-50 transition border border-gray-200">
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">Manage Guest Houses</h3>
+        <p class="text-gray-600">Add, edit, or remove guest house properties.</p>
+      </a>
+
+      <a routerLink="/admin/rooms" class="block p-6 bg-white rounded-lg shadow-lg hover:shadow-2xl hover:bg-gray-50 transition border border-gray-200">
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">Manage Rooms</h3>
+        <p class="text-gray-600">Define rooms within each guest house.</p>
+      </a>
+
+      <a routerLink="/admin/beds" class="block p-6 bg-white rounded-lg shadow-lg hover:shadow-2xl hover:bg-gray-50 transition border border-gray-200">
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">Manage Beds</h3>
+        <p class="text-gray-600">Add or remove individual beds in a room.</p>
+      </a>
+
+      <a routerLink="/admin/create-user" class="block p-6 bg-white rounded-lg shadow-lg hover:shadow-2xl hover:bg-gray-50 transition border border-gray-200">
+        <h3 class="text-xl font-semibold text-gray-800 mb-2">Create New User</h3>
+        <p class="text-gray-600">Add a new admin or user to the system.</p>
+      </a>
+    </div>
+  </div>
+</div>

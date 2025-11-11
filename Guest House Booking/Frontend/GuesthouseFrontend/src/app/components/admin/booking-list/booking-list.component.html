@@ -1,0 +1,59 @@
+<div class="container mx-auto p-4">
+  <div class="flex justify-between items-center mb-4">
+    <h1 class="text-3xl font-bold">Manage All Bookings</h1>
+  </div>
+
+  <div *ngIf="bookings.length > 0; else noBookings" class="bg-white border border-gray-200 shadow-md rounded overflow-x-auto">
+    <table class="min-w-full">
+      <thead class="bg-gray-800 text-white">
+        <tr>
+          <th class="py-2 px-4 text-left">User</th>
+          <th class="py-2 px-4 text-left">Guesthouse / Bed</th>
+          <th class="py-2 px-4 text-left">Room</th>
+          <th class="py-2 px-4 text-left">Dates</th>
+          <th class="py-2 px-4 text-left">Status</th>
+          <th class="py-2 px-4 text-left">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <tr *ngFor="let b of bookings" class="hover:bg-gray-50">
+          <td class="py-2 px-4">{{ b.userName }}</td>
+          <td class="py-2 px-4">{{ b.guestHouseName }} / {{ b.bedNumber }}</td>
+          <td class="py-2 px-4">{{ b.roomName }}</td>
+          <td class="py-2 px-4">
+            {{ b.dateFrom | date: 'shortDate' }} - {{ b.dateTo | date: 'shortDate' }}
+          </td>
+          <td class="py-2 px-4 font-medium"
+              [class.text-yellow-600]="b.status === 'Pending'"
+              [class.text-green-600]="b.status === 'Approved'"
+              [class.text-red-600]="b.status === 'Rejected'">
+            {{ b.status }}
+          </td>
+          <td class="py-2 px-4">
+            <ng-container *ngIf="b.status === 'Pending'">
+              <button (click)="onApprove(b.bookingId)" 
+                      class="bg-green-500 hover:bg-green-700 text-white py-1 px-3 rounded text-sm">
+                Approve
+              </button>
+              <button (click)="onReject(b.bookingId)" 
+                      class="bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded text-sm ml-2">
+                Reject
+              </button>
+            </ng-container>
+            <span *ngIf="b.status === 'Rejected'" class="text-sm text-gray-500">
+              {{ b.remarks }}
+            </span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <ng-template #noBookings>
+    <div class="bg-white p-6 rounded shadow-md border text-center">
+      <h2 class="text-xl text-gray-600">No bookings found.</h2>
+      <p class="text-gray-500">As users submit new bookings, they will appear here.</p>
+    </div>
+  </ng-template>
+
+</div>

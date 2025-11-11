@@ -1,0 +1,50 @@
+<div class="container mx-auto p-4 max-w-2xl">
+  <h1 class="text-3xl font-bold mb-4">
+    {{ isEditMode ? 'Edit Room' : 'Create Room' }}
+  </h1>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="bg-white p-6 rounded shadow-md border">
+    
+    <div class="mb-4">
+      <label for="guestHouseId" class="block text-gray-700 font-bold mb-2">Guest House</label>
+      <select id="guestHouseId" formControlName="guestHouseId" 
+              class="w-full px-3 py-2 border rounded"
+              [class.border-red-500]="form.get('guestHouseId')?.invalid && form.get('guestHouseId')?.touched">
+        <option [value]="null" disabled>Select a Guest House</option>
+        <option *ngFor="let gh of guestHouses" [value]="gh.guestHouseId">
+          {{ gh.name }}
+        </option>
+      </select>
+    </div>
+
+    <div class="mb-4">
+      <label for="roomName" class="block text-gray-700 font-bold mb-2">Room Name</label>
+      <input type="text" id="roomName" formControlName="roomName"
+             class="w-full px-3 py-2 border rounded"
+             [class.border-red-500]="form.get('roomName')?.invalid && form.get('roomName')?.touched">
+    </div>
+
+    <div class="mb-4">
+      <label for="genderAllowed" class="block text-gray-700 font-bold mb-2">Gender Allowed</label>
+      <select id="genderAllowed" formControlName="genderAllowed" 
+              class="w-full px-3 py-2 border rounded">
+        <option value="Any">Any</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
+    </div>
+
+    <div class="flex items-center space-x-4">
+      <button type="submit" [disabled]="form.invalid"
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:bg-gray-400">
+        {{ isEditMode ? 'Update' : 'Create' }}
+      </button>
+
+      <button type="button" (click)="onCancel()"
+              class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+        Cancel
+      </button>
+    </div>
+
+  </form>
+</div>

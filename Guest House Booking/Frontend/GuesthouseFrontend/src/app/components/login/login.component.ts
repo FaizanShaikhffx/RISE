@@ -24,9 +24,9 @@ export class LoginComponent {
     });
   }
 
-  onSubmit() {
+ onSubmit() {
     if (this.loginForm.invalid) {
-      return; // Don't submit if form is invalid
+      return;
     }
 
     this.errorMessage = null;
@@ -34,18 +34,20 @@ export class LoginComponent {
 
     this.authService.login(email, password).subscribe({
       next: (response) => {
-        // Success! Check the user's role and redirect
+        
+        // --- THIS IS THE REDIRECTION LOGIC ---
         if (response.role === 'Admin') {
+          // 1. If user is Admin, go to the Admin Dashboard
           this.router.navigate(['/admin-dashboard']);
         } else {
-          this.router.navigate(['/my-bookings']);
+          // 2. If user is a regular User, go to their "My Bookings" page
+          this.router.navigate(['/my-bookings']); 
         }
       },
       error: (err) => {
-        // Show an error message
+        // Show an error message if login fails
         this.errorMessage = 'Invalid email or password. Please try again.';
         console.error(err);
       },
     });
-  }
-}
+  }}

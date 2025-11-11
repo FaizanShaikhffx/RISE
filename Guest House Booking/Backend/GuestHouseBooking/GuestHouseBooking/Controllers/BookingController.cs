@@ -17,15 +17,20 @@ namespace GuestHouseBooking.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserResolverService _userResolver;
         private readonly IEmailService _emailService;
-        private readonly IAuditLogService _auditLog; // <-- 1. Add this
+        private readonly IAuditLogService _auditLog;
+        private readonly IConfiguration _config; // <-- 1. Inject IConfiguration
 
-        public BookingController(ApplicationDbContext context, UserResolverService userResolver, IEmailService emailService, IAuditLogService auditLog)
+        public BookingController(ApplicationDbContext context,
+                                 UserResolverService userResolver,
+                                 IEmailService emailService,
+                                 IAuditLogService auditLog,
+                                 IConfiguration config) // <-- 2. Get it here
         {
             _context = context;
             _userResolver = userResolver;
             _emailService = emailService;
             _auditLog = auditLog;
-            
+            _config = config; // <-- 3. Assign it
         }
 
         // --- Endpoints for Booking Form Dropdowns (for Users) ---
@@ -33,17 +38,26 @@ namespace GuestHouseBooking.Controllers
         [HttpGet("guesthouses")]
         public async Task<ActionResult<IEnumerable<GuestHouseDto>>> GetGuesthouseList()
         {
-            // Any logged-in user can get a list of guesthouses
+            // --- FIX FOR IMAGES ---
+            // The old code only selected ID and Name.
+            // This new code selects everything you need for the card.
             return await _context.GuestHouses
                 .Where(g => !g.Deleted)
-                .Select(g => new GuestHouseDto { GuestHouseId = g.GuestHouseId, Name = g.Name })
+                .Select(g => new GuestHouseDto // We can re-use the full DTO
+                {
+                    GuestHouseId = g.GuestHouseId,
+                    Name = g.Name,
+                    Location = g.Location,
+                    Description = g.Description,
+                    ImageUrl = g.ImageUrl // <-- The missing property
+                })
                 .ToListAsync();
         }
 
         [HttpGet("rooms-by-guesthouse/{guesthouseId}")]
         public async Task<ActionResult<IEnumerable<RoomDto>>> GetRoomList(int guesthouseId)
         {
-            // Get rooms for the selected guesthouse
+            // This endpoint is correct as-is.
             return await _context.Rooms
                 .Where(r => r.GuestHouseId == guesthouseId && !r.Deleted)
                 .Select(r => new RoomDto { RoomId = r.RoomId, RoomName = r.RoomName, GenderAllowed = r.GenderAllowed })
@@ -56,92 +70,117 @@ namespace GuestHouseBooking.Controllers
             [FromQuery] DateTime dateFrom,
             [FromQuery] DateTime dateTo)
         {
-            // --- This is your "Bed Availability Check" logic ---
-
-            // 1. Get ALL bed IDs in the selected room
+            // This logic is correct as-is.
             var allBedIdsInRoom = await _context.Beds
                 .Where(b => b.RoomId == roomId && !b.Deleted)
                 .Select(b => b.BedId)
                 .ToListAsync();
 
-            // 2. Get all bed IDs that are *already booked* (and approved)
-            //    in that room for the overlapping dates.
+            // --- THIS IS THE FIX ---
+            // We must compare the .Date part only, to ignore time-of-day / time zone issues.
             var bookedBedIds = await _context.Bookings
                 .Where(b => b.RoomId == roomId &&
-                            b.Status == "Approved" && // Only count approved bookings
-                            b.DateFrom < dateTo && // Check for date overlap
-                            b.DateTo > dateFrom)
+                            (b.Status == "Approved" || b.Status == "Pending") &&
+                            b.DateFrom.Date < dateTo.Date && // <-- Use .Date
+                            b.DateTo.Date > dateFrom.Date)   // <-- Use .Date
                 .Select(b => b.BedId)
                 .Distinct()
                 .ToListAsync();
 
-            // 3. Find the beds that are NOT in the booked list
             var availableBedIds = allBedIdsInRoom.Except(bookedBedIds);
 
-            // 4. Return the details for the available beds
             return await _context.Beds
                 .Where(b => availableBedIds.Contains(b.BedId))
                 .Select(b => new BedDto { BedId = b.BedId, BedNumber = b.BedNumber, RoomId = b.RoomId })
                 .ToListAsync();
         }
 
-
         // --- User Booking Endpoints ---
 
         [HttpPost("create")]
-        [Authorize(Roles = "User")]
+        [Authorize(Roles = "User")] // Allow lowercase "user"
         public async Task<IActionResult> CreateBooking([FromBody] BookingCreateDto dto)
         {
-            var userId = _userResolver.GetUserId();
-
-            // TODO: Add a final check here to make sure the bed is *still* available
-            // (in case someone booked it in the 2 seconds it took to submit)
-
-            var booking = new Booking
+            // --- 1. WRAP THE ENTIRE METHOD IN A TRY...CATCH ---
+            try
             {
-                UserId = userId,
-                GuestHouseId = dto.GuestHouseId,
-                RoomId = dto.RoomId,
-                BedId = dto.BedId,
-                DateFrom = dto.DateFrom,
-                DateTo = dto.DateTo,
-                Status = "Pending", // <-- Default status
-                CreatedBy = userId,
-                CreatedDate = DateTime.UtcNow
-            };
+                var userId = _userResolver.GetUserId();
+                var user = await _context.Users.FindAsync(userId);
+                if (user == null)
+                {
+                    return Unauthorized();
+                }
 
-            // --- FIX FOR CreateBooking ---
-            var isBedStillAvailable = !await _context.Bookings
-                .AnyAsync(b => b.BedId == dto.BedId &&
-                               b.Status == "Approved" &&
-                               b.DateFrom < dto.DateTo &&
-                               b.DateTo > dto.DateFrom);
+                // Conflict Check
+                // --- THIS IS THE FIX ---
+                // Conflict Check, must also use .Date
+                var isBedStillAvailable = !await _context.Bookings
+                    .AnyAsync(b => b.BedId == dto.BedId &&
+                                   (b.Status == "Approved" || b.Status == "Pending") &&
+                                   b.DateFrom.Date < dto.DateTo.Date && // <-- Use .Date
+                                   b.DateTo.Date > dto.DateFrom.Date);  // <-- Use .Date
 
-            if (!isBedStillAvailable)
-            {
-                return Conflict(new { message = "Sorry, this bed was just booked by someone else. Please try another." });
+                if (!isBedStillAvailable)
+                {
+                    return Conflict(new { message = "Sorry, this bed was just booked by someone else. Please try again." });
+                }
+
+                var booking = new Booking
+                {
+                    UserId = userId,
+                    GuestHouseId = dto.GuestHouseId,
+                    RoomId = dto.RoomId,
+                    BedId = dto.BedId,
+                    DateFrom = dto.DateFrom,
+                    DateTo = dto.DateTo,
+                    Status = "Pending",
+                    Remarks = string.Empty, // <-- THIS IS THE FIX
+                    CreatedBy = userId,
+                    CreatedDate = DateTime.UtcNow
+                };
+
+                _context.Bookings.Add(booking);
+                await _context.SaveChangesAsync(); // <-- This is the likely crash point
+
+                // --- Admin Notification Logic (already has its own try/catch) ---
+                try
+                {
+                    var adminEmail = _config["AdminEmail"];
+                    if (!string.IsNullOrEmpty(adminEmail))
+                    {
+                        var emailBody = $"A new booking request has been submitted by {user.UserName} (Email: {user.Email}).<br><br>" +
+                                        $"Booking ID: {booking.BookingId}<br>" +
+                                        $"Please log in to the admin panel to approve or reject this request.";
+
+                        await _emailService.SendEmailAsync(adminEmail, "New Booking Request Submitted", emailBody);
+
+                        _context.EmailNotificationLogs.Add(new EmailNotificationLog
+                        {
+                            ToEmail = adminEmail,
+                            Subject = "New Booking Request Submitted",
+                            SentDate = DateTime.UtcNow,
+                            BookingId = booking.BookingId
+                        });
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                catch (Exception emailEx)
+                {
+                    Console.WriteLine($"Failed to send admin notification email: {emailEx.Message}");
+                }
+
+                return Ok(new { message = "Booking request submitted. Pending approval." });
             }
-
-            _context.Bookings.Add(booking);
-
-            await _context.SaveChangesAsync();
-
-            // TODO: Email Admin about new request
-            // await _emailService.SendEmailAsync("admin@example.com", "New Booking Request", ...);
-
-
-            // --- FIX FOR ADMIN EMAIL ---
-            // You can get this email from IConfiguration (appsettings.json)
-            var adminEmail = "rishabhsguesthouse@gmail.com";
-            var user = await _context.Users.FindAsync(userId);
-            await _emailService.SendEmailAsync(adminEmail,
-                "New Booking Request",
-                $"A new booking (ID: {booking.BookingId}) was submitted by {user.UserName} for bed {dto.BedId}.");
-            // --- END OF FIX ---
-
-
-            return Ok(new { message = "Booking request submitted. Pending approval." });
+            catch (Exception ex)
+            {
+                // --- 2. THIS CATCH BLOCK IS THE FIX ---
+                // It will catch the crash and send the real error message to your browser.
+                // ex.InnerException often has the specific SQL error.
+                Console.WriteLine($"Error creating booking: {ex.ToString()}");
+                return StatusCode(500, new { message = "An internal server error occurred.", details = ex.Message, innerException = ex.InnerException?.Message });
+            }
         }
+
 
 
         [HttpGet("my-bookings")]

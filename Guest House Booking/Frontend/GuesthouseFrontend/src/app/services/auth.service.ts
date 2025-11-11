@@ -7,7 +7,8 @@ import { environment } from '../environments/environment';
 interface LoginResponse {
   token: string;
   userName: string, 
-  role: string
+  role: string,
+  gender: string; // <-- ADD THIS LINE
 }
 
 @Injectable({
@@ -38,6 +39,9 @@ export class AuthService {
 
   getRole(): string | null{
     return this.userSubject.value?.role || null;
+  }
+  getGender(): string | null {
+    return this.userSubject.value?.gender || null; // <-- ADD THIS METHOD
   }
 
   private loadUserFromStorage(){

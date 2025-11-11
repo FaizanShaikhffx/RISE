@@ -42,13 +42,15 @@ namespace GuestHouseBooking.Controllers
                 return Unauthorized("Account is inactive.");
             }
 
+
             var token = GenerateJwtToken(user);
 
             var response = new LoginResponseDto
             {
                 Token = token,
                 UserName = user.UserName,
-                Role = user.Role
+                Role = user.Role,
+                Gender = user.Gender // <-- ADD THIS LINE
             };
 
             return Ok(response);

@@ -163,7 +163,7 @@ appsettings.*.json
 !appsettings.Development.json  
 
 # Optional: keep dev settings if safe
-Guest House Booking\Backend\GuestHouseBooking\GuestHouseBooking\appsettings.json
+/Guest House Booking/Backend/GuestHouseBooking/GuestHouseBooking/appsettings.json
 # Azure secrets
 *.azurekeyvault.json
 

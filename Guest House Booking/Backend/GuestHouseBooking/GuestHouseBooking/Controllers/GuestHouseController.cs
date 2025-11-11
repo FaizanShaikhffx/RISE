@@ -46,35 +46,48 @@ namespace GuestHouseBooking.Controllers
         // --- FIX 1: Use GuestHouseCreateDto, not GuestHouseDto ---
         public async Task<ActionResult<GuestHouseDto>> CreateGuestHouse([FromBody] GuestHouseCreateDto dto)
         {
-            var currentUserId = _userResolver.GetUserId();
+            try {
+                var currentUserId = _userResolver.GetUserId();
 
-            var guestHouse = new GuestHouse
-            {
-                Name = dto.Name,
-                Location = dto.Location,
-                Description = dto.Description,
-                ImageUrl = dto.ImageUrl,
-                CreatedBy = currentUserId,
-                CreatedDate = DateTime.UtcNow
-            };
+                if (currentUserId == 0)
+                {
+                    return BadRequest(new { message = "Could not resolve user ID from token." });
+                }
 
-            _context.GuestHouses.Add(guestHouse);
-            await _context.SaveChangesAsync();
+                var guestHouse = new GuestHouse
+                {
+                    Name = dto.Name,
+                    Location = dto.Location,
+                    Description = dto.Description,
+                    ImageUrl = dto.ImageUrl,
+                    CreatedBy = currentUserId,
+                    CreatedDate = DateTime.UtcNow
+                };
 
-            // --- FIX 2: Convert the 'int' GuestHouseId to a 'string' ---
-            await _auditLogService.LogAction("GuestHouse Created", currentUserId, $"New GH: {guestHouse.Name}, ID: {guestHouse.GuestHouseId}");
+                _context.GuestHouses.Add(guestHouse);
+                await _context.SaveChangesAsync();
 
-            var resultDto = new GuestHouseDto
-            {
-                GuestHouseId = guestHouse.GuestHouseId,
-                Name = guestHouse.Name,
-                Location = guestHouse.Location,
+                // --- FIX 2: Convert the 'int' GuestHouseId to a 'string' ---
+                await _auditLogService.LogAction("GuestHouse Created", currentUserId, $"New GH: {guestHouse.Name}, ID: {guestHouse.GuestHouseId}");
 
-                Description = guestHouse.Description
-            };
+                var resultDto = new GuestHouseDto
+                {
+                    GuestHouseId = guestHouse.GuestHouseId,
+                    Name = guestHouse.Name,
+                    Location = guestHouse.Location,
+                    Description = guestHouse.Description,
+                    ImageUrl = guestHouse.ImageUrl
+                };
 
-            // We use nameof(GetGuestHouse) which points to the (id) overload
-            return CreatedAtAction(nameof(GetGuestHouse), new { id = guestHouse.GuestHouseId }, resultDto);
+                // We use nameof(GetGuestHouse) which points to the (id) overload
+                return CreatedAtAction(nameof(GetGuestHouse), new { id = guestHouse.GuestHouseId }, resultDto);
+            }
+            catch (Exception ex) {
+                // This will catch the database error and send it to the console
+                // ex.InnerException will often have the real SQL error.
+                Console.WriteLine(ex.ToString());
+                return StatusCode(500, new { message = "An internal server error occurred.", details = ex.Message });
+            }
         }
 
         [HttpGet("{id}")]

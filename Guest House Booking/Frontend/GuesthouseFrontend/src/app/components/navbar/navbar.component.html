@@ -1,0 +1,43 @@
+<nav class="bg-gray-800 text-white p-4 shadow-md">
+  <div class="container mx-auto flex justify-between items-center">
+    
+    <ng-container *ngIf="authService.user$ | async as user; else loggedOutNav">
+      <div class="flex-1">
+        <a [routerLink]="user.role === 'Admin' ? '/admin-dashboard' : '/my-bookings'" class="text-2xl font-bold">
+          Guesthouse
+        </a>
+      </div>
+
+      <div class="flex space-x-4 items-center">
+        <span class="text-gray-300">Welcome, {{ user.userName }}!</span>
+        
+        <ng-container *ngIf="user.role === 'Admin'; else userLinks">
+          <a routerLink="/admin/guesthouses" class="text-yellow-400 hover:text-yellow-200 ml-4">Manage Guesthouses</a>
+          <a routerLink="/admin/rooms" class="text-yellow-400 hover:text-yellow-200 ml-4">Manage Rooms</a>
+          <a routerLink="/admin/beds" class="text-yellow-400 hover:text-yellow-200 ml-4">Manage Beds</a>
+          <a routerLink="/admin/bookings" class="text-yellow-400 hover:text-yellow-200 ml-4">Manage Bookings</a>
+        </ng-container>
+
+        <ng-template #userLinks>
+          <a routerLink="/my-bookings" class="hover:text-gray-300 ml-4">My Bookings</a>
+          <a routerLink="/new-booking" class="hover:text-gray-300 ml-4">New Booking</a>
+        </ng-template>
+        
+        <button (click)="logout()" class="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded ml-4">
+          Logout
+        </button>
+      </div>
+    </ng-container>
+
+    <ng-template #loggedOutNav>
+      <div class="flex-1">
+        <a routerLink="/" class="text-2xl font-bold">Guesthouse</a>
+      </div>
+      
+      <a routerLink="/login" class="bg-blue-500 hover:bg-blue-700 text-white py-2 px-4 rounded">
+        Login
+      </a>
+    </ng-template>
+
+  </div>
+</nav>
