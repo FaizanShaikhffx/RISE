@@ -1,6 +1,17 @@
-<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="adminForm" (ngSubmit)="onSubmit()">
 
-  <div>
+  <label for="name">
+  </label>
+    <input type="text" id="name" formControlName="name">
+
+    <div *ngIf="AdminName?.invalid && (AdminName?.dirty || AdminName?.touched)">
+      <div *ngIf="AdminName?.errors?.['required']">
+        Name is required
+      </div>
+    </div>
+
+
+  <!-- <div>
     <label for="name">Name</label>
     <input type="text" id="name"  formControlName="name">
   </div>
@@ -47,11 +58,11 @@
       Minimum 5 character required
     </div>
     
-  </div>
+  </div> -->
 
   <br><br>
 
-  <div>
+  <!-- <div>
     <select formControlName="gender"  >
       <option value="">Select Gender</option>
       <option value="male">Male</option>
@@ -63,7 +74,7 @@
     <div *ngIf=""></div>
   </div>
 
-  <br><br>
+  <br><br> -->
 
   <button [disabled]="userForm.invalid" >Submit</button>
 

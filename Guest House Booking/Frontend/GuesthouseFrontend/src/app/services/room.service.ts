@@ -45,4 +45,9 @@ export class RoomService {
   delete(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+
+getAllByGuesthouse(guesthouseId: number): Observable<RoomDto[]> {
+    // We can re-use the API endpoint from the booking controller
+    return this.http.get<RoomDto[]>(`${environment.apiUrl}/Booking/rooms-by-guesthouse/${guesthouseId}`);
+  }
 }

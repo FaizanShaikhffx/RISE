@@ -1,77 +1,204 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RoomService } from 'src/app/services/room.service';
+import { RoomService, RoomDto, RoomCreateDto } from 'src/app/services/room.service';
 import { GuesthouseService, GuestHouseDto } from 'src/app/services/guesthouse.service';
+import { BedService, BedDto, BedCreateDto } from 'src/app/services/bed.service'; // <-- Import Bed services
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-room-form',
   templateUrl: './room-form.component.html'
 })
 export class RoomFormComponent implements OnInit {
-  form: FormGroup;
-  isEditMode = false;
-  currentId: number = 0;
+  // Room Form
+  roomForm: FormGroup;
+  isEditMode = false; // This is now ALWAYS "edit mode" for the room
+  currentRoomId: number = 0;
+  isLoading = false;
+  
+  // Guesthouse (for context)
   guestHouses: GuestHouseDto[] = []; 
+  guesthouseId: number | null = null; // Guesthouse this room belongs to
+  guesthouseName: string = '';
+
+  // --- NEW BED MANAGEMENT STATE ---
+  beds: BedDto[] = [];
+  bedForm: FormGroup;
+  isBedEditMode = false;
+  currentBedId: number | null = null;
+  
+  // --- WIZARD STATE ---
+  isWizardFlow = false;
 
   constructor(
     private fb: FormBuilder,
     private roomService: RoomService,
     private guesthouseService: GuesthouseService, 
+    private bedService: BedService, // <-- Inject BedService
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private zone: NgZone
   ) {
-    this.form = this.fb.group({
+    // Form for Room
+    this.roomForm = this.fb.group({
       guestHouseId: [null, Validators.required],
       roomName: ['', Validators.required],
       genderAllowed: ['Any', Validators.required]
     });
+
+    // Form for Beds
+    this.bedForm = this.fb.group({
+      bedNumber: ['', Validators.required]
+    });
   }
 
   ngOnInit(): void {
-    this.guesthouseService.getAll().subscribe(data => {
-      this.guestHouses = data;
+    // Check for wizard flow first (from Step 1)
+    this.route.queryParams.subscribe(params => {
+      if (params['guesthouseId']) {
+        this.isWizardFlow = true;
+        this.guesthouseId = +params['guesthouseId'];
+        
+        this.roomForm.get('guestHouseId')?.setValue(this.guesthouseId);
+        this.roomForm.get('guestHouseId')?.disable();
+
+        this.guesthouseService.getById(this.guesthouseId).subscribe(gh => {
+          this.guesthouseName = gh.name;
+        });
+      } else {
+        // Not a wizard, load all guesthouses for the normal dropdown (legacy)
+        this.guesthouseService.getAll().subscribe(data => {
+          this.guestHouses = data;
+        });
+      }
     });
 
+    // Check for edit mode (from Guesthouse "Manage Beds" link)
     this.route.params.subscribe(params => {
       if (params['id']) {
         this.isEditMode = true;
-        this.currentId = +params['id'];
-        this.roomService.getById(this.currentId).subscribe(data => {
-          this.form.patchValue(data);
+        this.currentRoomId = +params['id'];
+        this.roomForm.get('guestHouseId')?.disable(); 
+        
+        this.roomService.getById(this.currentRoomId).subscribe(data => {
+          this.roomForm.patchValue(data);
+          this.guesthouseId = data.guestHouseId; // Set guesthouseId for "Cancel"
+          this.loadBeds(); // Load beds for this room
         });
       }
     });
   }
 
-  // --- THIS IS THE FIX ---
-  onSubmit() {
-    if (this.form.invalid) {
-      return;
-    }
+  // --- Room Form Logic ---
+  onRoomSubmit() {
+    if (this.roomForm.invalid) return;
+    this.isLoading = true;
 
-    const navigateToList = () => {
-      // This function navigates back to the list.
-      this.router.navigate(['/admin/rooms']); // <-- Change this route
+    const formValue = this.roomForm.getRawValue(); 
+    const roomData: RoomCreateDto = {
+      guestHouseId: formValue.guestHouseId,
+      roomName: formValue.roomName,
+      genderAllowed: formValue.genderAllowed
     };
 
     if (this.isEditMode) {
-      this.roomService.update(this.currentId, this.form.value)
-        .subscribe({
-          next: navigateToList, // Navigate on success
-          error: (err) => console.error('Update failed', err)
-        });
+      // --- UPDATE LOGIC ---
+      this.roomService.update(this.currentRoomId, roomData).subscribe({
+        next: () => {
+          this.isLoading = false;
+          // You can show a success message here
+        },
+        error: (err) => {
+          this.isLoading = false;
+          alert('Failed to update room.');
+        }
+      });
     } else {
-      this.roomService.create(this.form.value)
-        .subscribe({
-          next: navigateToList, // Navigate on success
-          error: (err) => console.error('Create failed', err)
-        });
+      // --- CREATE LOGIC (Wizard) ---
+      this.roomService.create(roomData).subscribe({
+        next: (newRoom) => {
+          this.isLoading = false;
+          if (this.isWizardFlow) {
+            // --- Step 2 -> Step 3: Go to Add Beds ---
+            this.zone.run(() => {
+              this.router.navigate(['/admin/bed/new'], { 
+                queryParams: { 
+                  roomId: newRoom.roomId,
+                  guesthouseId: this.guesthouseId
+                } 
+              });
+            });
+          } else {
+            // This case shouldn't happen in the new flow, but as a fallback:
+            this.router.navigate(['/admin/guesthouse/edit', roomData.guestHouseId]);
+          }
+        },
+        error: (err: HttpErrorResponse) => {
+          this.isLoading = false;
+          alert(err.error?.innerException || 'Failed to create room.');
+        }
+      });
     }
   }
 
-  // --- ADD THIS CANCEL BUTTON LOGIC ---
+  // --- NEW BED LOGIC ---
+  loadBeds() {
+    this.bedService.getAllByRoom(this.currentRoomId).subscribe(data => {
+      this.beds = data;
+    });
+  }
+
+  onBedSubmit() {
+    if (this.bedForm.invalid) return;
+
+    const bedData: BedCreateDto = {
+      ...this.bedForm.value,
+      roomId: this.currentRoomId // Automatically assign this room's ID
+    };
+
+    if (this.isBedEditMode && this.currentBedId) {
+      // Update Bed
+      this.bedService.update(this.currentBedId, bedData).subscribe(() => {
+        this.resetBedForm();
+        this.loadBeds();
+      });
+    } else {
+      // Create Bed
+      this.bedService.create(bedData).subscribe(() => {
+        this.resetBedForm();
+        this.loadBeds();
+      });
+    }
+  }
+
+  onEditBed(bed: BedDto) {
+    this.isBedEditMode = true;
+    this.currentBedId = bed.bedId;
+    this.bedForm.patchValue(bed);
+  }
+
+  onDeleteBed(bedId: number) {
+    if (confirm('Are you sure you want to delete this bed?')) {
+      this.bedService.delete(bedId).subscribe(() => {
+        this.loadBeds();
+        this.resetBedForm();
+      });
+    }
+  }
+
+  resetBedForm() {
+    this.isBedEditMode = false;
+    this.currentBedId = null;
+    this.bedForm.reset();
+  }
+  
   onCancel() {
-    this.router.navigate(['/admin/rooms']); // <-- Change this route
+    // Go back to the Guesthouse edit page
+    if (this.guesthouseId) {
+      this.router.navigate(['/admin/guesthouse/edit', this.guesthouseId]);
+    } else {
+      this.router.navigate(['/admin/guesthouses']);
+    }
   }
 }

@@ -29,7 +29,6 @@ namespace GuestHouseBooking.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GuestHouseDto>>> GetGuestHouses()
         {
-            // Note: We filter for soft delete
             return await _context.GuestHouses
                 .Where(g => !g.Deleted)
                 .Select(g => new GuestHouseDto
@@ -43,7 +42,6 @@ namespace GuestHouseBooking.Controllers
         }
 
         [HttpPost]
-        // --- FIX 1: Use GuestHouseCreateDto, not GuestHouseDto ---
         public async Task<ActionResult<GuestHouseDto>> CreateGuestHouse([FromBody] GuestHouseCreateDto dto)
         {
             try {
@@ -67,7 +65,6 @@ namespace GuestHouseBooking.Controllers
                 _context.GuestHouses.Add(guestHouse);
                 await _context.SaveChangesAsync();
 
-                // --- FIX 2: Convert the 'int' GuestHouseId to a 'string' ---
                 await _auditLogService.LogAction("GuestHouse Created", currentUserId, $"New GH: {guestHouse.Name}, ID: {guestHouse.GuestHouseId}");
 
                 var resultDto = new GuestHouseDto
@@ -79,19 +76,21 @@ namespace GuestHouseBooking.Controllers
                     ImageUrl = guestHouse.ImageUrl
                 };
 
-                // We use nameof(GetGuestHouse) which points to the (id) overload
                 return CreatedAtAction(nameof(GetGuestHouse), new { id = guestHouse.GuestHouseId }, resultDto);
             }
-            catch (Exception ex) {
-                // This will catch the database error and send it to the console
-                // ex.InnerException will often have the real SQL error.
+            catch (Exception ex)
+            {
                 Console.WriteLine(ex.ToString());
-                return StatusCode(500, new { message = "An internal server error occurred.", details = ex.Message });
+                return StatusCode(500, new
+                {
+                    message = "An internal server error occurred.",
+                    details = ex.Message,
+                    innerException = ex.InnerException?.Message 
+                });
             }
         }
 
         [HttpGet("{id}")]
-        // --- FIX 3: Return type should be GuestHouseDto ---
         public async Task<ActionResult<GuestHouseDto>> GetGuestHouse(int id)
         {
             var guestHouse = await _context.GuestHouses
@@ -114,7 +113,6 @@ namespace GuestHouseBooking.Controllers
         }
 
         [HttpPut("{id}")]
-        // --- FIX 4: Use GuestHouseCreateDto for the update data ---
         public async Task<IActionResult> UpdateGuestHouse(int id, [FromBody] GuestHouseCreateDto dto)
         {
             var guestHouse = await _context.GuestHouses.FindAsync(id);
@@ -147,7 +145,7 @@ namespace GuestHouseBooking.Controllers
         public async Task<IActionResult> DeleteGuestHouse(int id)
         {
             var guestHouse = await _context.GuestHouses.FindAsync(id);
-            if (guestHouse == null || guestHouse.Deleted) // Check if already deleted
+            if (guestHouse == null || guestHouse.Deleted)
             {
                 return NotFound();
             }

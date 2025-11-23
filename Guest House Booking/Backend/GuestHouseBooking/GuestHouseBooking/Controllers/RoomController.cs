@@ -62,7 +62,6 @@ namespace GuestHouseBooking.Controllers
             return Ok(room);
         }
 
-        // POST: api/room
         [HttpPost]
         public async Task<ActionResult<RoomDto>> CreateRoom([FromBody] RoomCreateDto dto)
         {
@@ -80,7 +79,6 @@ namespace GuestHouseBooking.Controllers
             _context.Rooms.Add(room);
             await _context.SaveChangesAsync();
 
-            // Log this action
             await _auditLog.LogAction("Create Room", currentUserId, $"New Room: {room.RoomName}", null);
 
             var resultDto = new RoomDto
@@ -94,7 +92,6 @@ namespace GuestHouseBooking.Controllers
             return CreatedAtAction(nameof(GetRoom), new { id = room.RoomId }, resultDto);
         }
 
-        // PUT: api/room/5
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateRoom(int id, [FromBody] RoomCreateDto dto)
         {
@@ -108,7 +105,6 @@ namespace GuestHouseBooking.Controllers
             var currentUserId = _userResolver.GetUserId();
             string oldVal = $"Name: {room.RoomName}, Gender: {room.GenderAllowed}";
 
-            // Update properties
             room.GuestHouseId = dto.GuestHouseId;
             room.RoomName = dto.RoomName;
             room.GenderAllowed = dto.GenderAllowed;
@@ -121,10 +117,9 @@ namespace GuestHouseBooking.Controllers
             string newVal = $"Name: {dto.RoomName}, Gender: {dto.GenderAllowed}";
             await _auditLog.LogAction("Update Room", currentUserId, newVal, oldVal);
 
-            return NoContent(); // Success
+            return NoContent();
         }
 
-        // DELETE: api/room/5 (Soft Delete)
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRoom(int id)
         {
@@ -136,8 +131,7 @@ namespace GuestHouseBooking.Controllers
 
             var currentUserId = _userResolver.GetUserId();
 
-            // --- THIS IS YOUR SOFT DELETE ---
-            // We do NOT delete. We just set the flag.
+         
             room.Deleted = true;
             room.DeletedBy = currentUserId;
             room.DeletedDate = DateTime.UtcNow;

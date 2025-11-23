@@ -18,6 +18,21 @@ userForm = new FormGroup({
 })
 
 
+adminForm = new FormGroup({
+  name: new FormControl('', [Validators.required, Validators.minLength(5)]),
+  age: new FormControl('', [Validators.required, Validators.minLength(3)])
+})
+
+
+
+get AdminName(){
+  return this.adminForm.get('name');
+} 
+
+
+
+
+
 
 get Name(){
   return this.userForm.get("name")!;

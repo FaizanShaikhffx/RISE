@@ -11,6 +11,12 @@ interface LoginResponse {
   gender: string; // <-- ADD THIS LINE
 }
 
+interface ResetPasswordDto {
+    email: string;
+    otp: string;
+    newPassword: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -67,6 +73,14 @@ export class AuthService {
     localStorage.removeItem('user');
 
     this.userSubject.next(null);
+  }
+
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/forgot-password`, { email });
+  }
+
+  resetPassword(dto: ResetPasswordDto): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-password`, dto);
   }
 
 }

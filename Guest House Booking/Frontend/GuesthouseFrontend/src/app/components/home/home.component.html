@@ -1,43 +1,37 @@
-
-
-<section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20">
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 bg-gradient-to-br from-background via-blue-50/30 to-background">
   <div class="absolute inset-0 z-0">
     <div
-      class="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-float"
+      class="absolute top-0 left-1/4 w-96 h-96 bg-blue-400/15 rounded-full blur-3xl animate-pulse"
     ></div>
     <div
-      class="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-float"
+      class="absolute bottom-0 right-1/4 w-96 h-96 bg-sky-400/15 rounded-full blur-3xl animate-pulse"
       style="animation-delay: 1s"
     ></div>
     <div
-      class="absolute top-1/2 right-0 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-float"
+      class="absolute top-1/2 right-0 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse"
       style="animation-delay: 2s"
     ></div>
   </div>
 
   <div class="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
     <div class="transition-all duration-1000 opacity-100 translate-y-0">
-      <div
-        class="inline-block mb-6 px-4 py-2 bg-secondary/20 border border-secondary/40 rounded-full backdrop-blur-sm"
-      >
-        <span class="text-sm font-semibold text-primary">✨ Book Your Perfect Stay</span>
-      </div>
+      
 
       <h1 class="text-5xl sm:text-6xl lg:text-7xl font-bold text-foreground mb-6 leading-tight">
         Find Your Comfort with
-        <span class="bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">
+        <span class="block bg-gradient-to-r from-blue-600 via-sky-500 to-blue-400 bg-clip-text text-transparent pb-3">
           GuestHouse Bookings
         </span>
       </h1>
 
-      <p class="text-lg sm:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto leading-relaxed">
+      <p class="text-lg sm:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto mt-12 leading-relaxed">
         Seamless booking for guest houses. Find available rooms, check bed availability, and
         secure your stay with quick admin approval.
       </p>
 
       <div class="flex flex-col sm:flex-row gap-4 justify-center">
         <button
-          class="group px-8 py-4 bg-primary text-primary-foreground rounded-lg font-semibold hover:shadow-2xl hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
+          class="group px-8 py-4 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
         >
           Browse Guesthouses
           <svg
@@ -50,14 +44,14 @@
             stroke-width="2"
             stroke-linecap="round"
             stroke-linejoin="round"
-            class="lucide lucide-arrow-right group-hover:translate-x-1 transition-transform"
+            class="group-hover:translate-x-1 transition-transform"
           >
             <path d="M5 12h14" />
             <path d="m12 5 7 7-7 7" />
           </svg>
         </button>
         <button
-          class="px-8 py-4 border-2 border-primary text-primary rounded-lg font-semibold hover:bg-primary/5 transition-all duration-300"
+          class="px-8 py-4 bg-transparent border border-blue-500 text-blue-600 rounded-xl font-semibold hover:bg-blue-500 hover:text-white transition-all duration-300"
         >
           How It Works
         </button>
@@ -68,146 +62,19 @@
       class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6 transition-all duration-1000 opacity-100 translate-y-0"
       style="transition-delay: 0.3s"
     >
-      <div
-        *ngFor="let stat of stats"
-        class="p-6 bg-card/50 backdrop-blur-md border border-border rounded-2xl hover:border-primary/50 hover:shadow-lg transition-all duration-300 hover:scale-105"
-      >
-        <div class="text-3xl font-bold text-primary mb-2">{{ stat.number }}</div>
-        <div class="text-muted-foreground">{{ stat.label }}</div>
-      </div>
+      
     </div>
   </div>
 </section>
 
-<section class="relative -mt-20 z-20 px-4 sm:px-6 lg:px-8 pb-20">
-  <div class="max-w-5xl mx-auto">
-    <div class="bg-card border border-border rounded-2xl shadow-2xl p-6 sm:p-8 backdrop-blur-md">
-      <h2 class="text-2xl font-bold text-foreground mb-6">Check Availability</h2>
 
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div class="relative">
-          <label class="block text-sm font-semibold text-foreground mb-2">Guesthouse</label>
-          <div class="relative">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-map-pin absolute left-3 top-3 text-primary"
-            >
-              <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z" />
-              <circle cx="12" cy="10" r="3" />
-            </svg>
-            <select
-              [(ngModel)]="searchQuery.guesthouse"
-              class="w-full pl-10 pr-4 py-3 bg-input border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all appearance-none"
-            >
-              <option value="" disabled>Select Guesthouse</option>
-              <option value="villa">Sunrise Villa</option>
-              <option value="lodge">The Downtown Lodge</option>
-              <option value="retreat">Lakeview Retreat</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="relative">
-          <label class="block text-sm font-semibold text-foreground mb-2">Check-in</label>
-          <div class="relative">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-calendar absolute left-3 top-3 text-primary"
-            >
-              <path d="M8 2v4" />
-              <path d="M16 2v4" />
-              <rect width="18" height="18" x="3" y="4" rx="2" />
-              <path d="M3 10h18" />
-            </svg>
-            <input
-              type="date"
-              [(ngModel)]="searchQuery.checkIn"
-              class="w-full pl-10 pr-4 py-3 bg-input border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
-            />
-          </div>
-        </div>
-
-        <div class="relative">
-          <label class="block text-sm font-semibold text-foreground mb-2">Guests</label>
-          <div class="relative">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-users absolute left-3 top-3 text-primary"
-            >
-              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
-              <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-            </svg>
-            <select
-              [(ngModel)]="searchQuery.guests"
-              class="w-full pl-10 pr-4 py-3 bg-input border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all appearance-none"
-            >
-              <option>1</option>
-              <option>2</option>
-              <option>3</option>
-              <option>4+</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="flex items-end">
-          <button
-            class="w-full bg-gradient-to-r from-primary to-accent text-primary-foreground py-3 rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-search"
-            >
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.3-4.3" />
-            </svg>
-            <span class="hidden sm:inline">Check Availability</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <section
   id="guesthouses"
-  class="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-muted/20"
+  class="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-b from-background to-blue-50/20"
 >
   <div class="max-w-7xl mx-auto">
-    <div class="text-center mb-16 animate-slide-in-up">
+    <div class="text-center mb-16">
       <h2 class="text-4xl sm:text-5xl font-bold text-foreground mb-4">Our Guesthouses</h2>
       <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
         A selection of our comfortable and well-managed guesthouses.
@@ -215,61 +82,54 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <div
-        *ngFor="let dest of destinations; let i = index"
-        class="group cursor-pointer animate-fade-in-scale"
-        [style.animation-delay]="i * 0.1 + 's'"
-      >
+      
+      <div class="group cursor-pointer h-full">
         <div
-          class="relative overflow-hidden rounded-2xl bg-card border border-border hover:border-primary/50 transition-all duration-300 h-full flex flex-col"
+          class="relative overflow-hidden rounded-2xl bg-white border border-blue-200/50 hover:border-blue-400 transition-all duration-300 h-full flex flex-col hover:shadow-xl hover:shadow-blue-300/20"
         >
-          <div class="relative h-64 overflow-hidden bg-muted">
+          <div class="relative h-64 overflow-hidden bg-gray-200">
             <img
-              [src]="dest.image"
-              [alt]="dest.name"
+              src="https://images.pexels.com/photos/271618/pexels-photo-271618.jpeg?auto=compress&cs=tinysrgb&w=600"
+              alt="Guesthouse 1"
               class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
             />
             <div
-              class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+              class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
             ></div>
           </div>
 
           <div class="p-6 flex-1 flex flex-col">
             <div class="flex items-start justify-between mb-3">
               <div>
-                <h3 class="text-xl font-bold text-foreground mb-1">{{ dest.name }}</h3>
+                <h3 class="text-xl font-bold text-foreground mb-1">Serene Valley Guesthouse</h3>
                 <div class="flex items-center gap-1">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     width="16"
                     height="16"
                     viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="lucide lucide-star fill-accent text-accent"
+                    fill="currentColor"
+                    class="text-yellow-400"
                   >
                     <polygon
                       points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
                     />
                   </svg>
-                  <span class="text-sm font-semibold text-foreground">{{ dest.rating }}</span>
-                  <span class="text-sm text-muted-foreground">({{ dest.reviews }})</span>
+                  <span class="text-sm font-semibold text-foreground">4.9</span>
+                  <span class="text-sm text-muted-foreground">(240)</span>
                 </div>
               </div>
             </div>
 
-            <p class="text-sm text-muted-foreground mb-4 flex-1">{{ dest.description }}</p>
+            <p class="text-sm text-muted-foreground mb-4 flex-1">Enjoy a peaceful stay with stunning mountain views and modern amenities.</p>
 
-            <div class="flex items-center justify-between pt-4 border-t border-border">
+            <div class="flex items-center justify-between pt-4 border-t border-blue-200/50">
               <div>
                 <span class="text-xs text-muted-foreground">From</span>
-                <p class="text-2xl font-bold text-primary">{{ dest.price }}</p>
+                <p class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-sky-600 bg-clip-text text-transparent">₹ 2500/night</p>
               </div>
               <button
-                class="p-3 bg-primary text-primary-foreground rounded-lg group-hover:scale-110 transition-transform duration-300"
+                class="p-3 bg-blue-600 text-white rounded-lg group-hover:scale-110 transition-transform duration-300 hover:bg-blue-700"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -281,7 +141,6 @@
                   stroke-width="2"
                   stroke-linecap="round"
                   stroke-linejoin="round"
-                  class="lucide lucide-arrow-right"
                 >
                   <path d="M5 12h14" />
                   <path d="m12 5 7 7-7 7" />
@@ -291,11 +150,217 @@
           </div>
         </div>
       </div>
+      
+      <div class="group cursor-pointer h-full">
+        <div
+          class="relative overflow-hidden rounded-2xl bg-white border border-blue-200/50 hover:border-blue-400 transition-all duration-300 h-full flex flex-col hover:shadow-xl hover:shadow-blue-300/20"
+        >
+          <div class="relative h-64 overflow-hidden bg-gray-200">
+            <img
+              src="https://images.pexels.com/photos/1457842/pexels-photo-1457842.jpeg?auto=compress&cs=tinysrgb&w=600"
+              alt="Guesthouse 2"
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            ></div>
+          </div>
+
+          <div class="p-6 flex-1 flex flex-col">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <h3 class="text-xl font-bold text-foreground mb-1">Urban Comfort Inn</h3>
+                <div class="flex items-center gap-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    class="text-yellow-400"
+                  >
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                    />
+                  </svg>
+                  <span class="text-sm font-semibold text-foreground">4.7</span>
+                  <span class="text-sm text-muted-foreground">(188)</span>
+                </div>
+              </div>
+            </div>
+
+            <p class="text-sm text-muted-foreground mb-4 flex-1">Located in the heart of the city, perfect for business or leisure.</p>
+
+            <div class="flex items-center justify-between pt-4 border-t border-blue-200/50">
+              <div>
+                <span class="text-xs text-muted-foreground">From</span>
+                <p class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-sky-600 bg-clip-text text-transparent">₹ 3000/night</p>
+              </div>
+              <button
+                class="p-3 bg-blue-600 text-white rounded-lg group-hover:scale-110 transition-transform duration-300 hover:bg-blue-700"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m12 5 7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="group cursor-pointer h-full">
+        <div
+          class="relative overflow-hidden rounded-2xl bg-white border border-blue-200/50 hover:border-blue-400 transition-all duration-300 h-full flex flex-col hover:shadow-xl hover:shadow-blue-300/20"
+        >
+          <div class="relative h-64 overflow-hidden bg-gray-200">
+            <img
+              src="https://images.pexels.com/photos/6934229/pexels-photo-6934229.jpeg?auto=compress&cs=tinysrgb&w=600"
+              
+              alt="Guesthouse 3"
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            ></div>
+          </div>
+
+          <div class="p-6 flex-1 flex flex-col">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <h3 class="text-xl font-bold text-foreground mb-1">Riverside Lodge</h3>
+                <div class="flex items-center gap-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    class="text-yellow-400"
+                  >
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                    />
+                  </svg>
+                  <span class="text-sm font-semibold text-foreground">4.8</span>
+                  <span class="text-sm text-muted-foreground">(312)</span>
+                </div>
+              </div>
+            </div>
+
+            <p class="text-sm text-muted-foreground mb-4 flex-1">A cozy escape by the water, ideal for a relaxing getaway.</p>
+
+            <div class="flex items-center justify-between pt-4 border-t border-blue-200/50">
+              <div>
+                <span class="text-xs text-muted-foreground">From</span>
+                <p class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-sky-600 bg-clip-text text-transparent">₹ 2800/night</p>
+              </div>
+              <button
+                class="p-3 bg-blue-600 text-white rounded-lg group-hover:scale-110 transition-transform duration-300 hover:bg-blue-700"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m12 5 7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="group cursor-pointer h-full">
+        <div
+          class="relative overflow-hidden rounded-2xl bg-white border border-blue-200/50 hover:border-blue-400 transition-all duration-300 h-full flex flex-col hover:shadow-xl hover:shadow-blue-300/20"
+        >
+          <div class="relative h-64 overflow-hidden bg-gray-200">
+            <img
+              src="https://images.pexels.com/photos/210265/pexels-photo-210265.jpeg?auto=compress&cs=tinysrgb&w=600"
+              alt="Guesthouse 4"
+              class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            />
+            <div
+              class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            ></div>
+          </div>
+
+          <div class="p-6 flex-1 flex flex-col">
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <h3 class="text-xl font-bold text-foreground mb-1">The Grand Guesthouse</h3>
+                <div class="flex items-center gap-1">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    class="text-yellow-400"
+                  >
+                    <polygon
+                      points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"
+                    />
+                  </svg>
+                  <span class="text-sm font-semibold text-foreground">5.0</span>
+                  <span class="text-sm text-muted-foreground">(450)</span>
+                </div>
+              </div>
+            </div>
+
+            <p class="text-sm text-muted-foreground mb-4 flex-1">Experience luxury and top-tier service in our finest establishment.</p>
+
+            <div class="flex items-center justify-between pt-4 border-t border-blue-200/50">
+              <div>
+                <span class="text-xs text-muted-foreground">From</span>
+                <p class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-sky-600 bg-clip-text text-transparent">₹ 2000/night</p>
+              </div>
+              <button
+                class="p-3 bg-blue-600 text-white rounded-lg group-hover:scale-110 transition-transform duration-300 hover:bg-blue-700"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 12h14" />
+                  <path d="m12 5 7 7-7 7" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
     <div class="text-center mt-12">
       <button
-        class="px-8 py-4 bg-primary text-primary-foreground rounded-lg font-semibold hover:shadow-lg hover:scale-105 transition-all duration-300"
+        class="px-8 py-4 bg-blue-600 text-white rounded-xl font-semibold hover:bg-blue-700 hover:scale-1S05 transition-all duration-300"
       >
         View All Guesthouses
       </button>
@@ -305,7 +370,7 @@
 
 <section id="features" class="py-20 px-4 sm:px-6 lg:px-8 bg-background">
   <div class="max-w-7xl mx-auto">
-    <div class="text-center mb-16 animate-slide-in-up">
+    <div class="text-center mb-16">
       <h2 class="text-4xl sm:text-5xl font-bold text-foreground mb-4">Why Book With Us</h2>
       <p class="text-lg text-muted-foreground max-w-2xl mx-auto">
         We provide a seamless, secure, and reliable booking experience.
@@ -313,71 +378,102 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      
       <div
-        *ngFor="let feature of features; let i = index"
-        class="group p-8 bg-card border border-border rounded-2xl hover:border-primary/50 hover:shadow-lg hover:scale-105 transition-all duration-300 animate-fade-in-scale"
-        [style.animation-delay]="i * 0.1 + 's'"
+        class="group p-8 bg-white border border-blue-200/50 rounded-2xl hover:border-blue-400 hover:shadow-lg hover:shadow-blue-300/20 hover:scale-105 transition-all duration-300"
       >
         <div
-          class="w-14 h-14 bg-gradient-to-br from-primary/20 to-accent/20 rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+          class="w-14 h-14 bg-gradient-to-br from-blue-100 to-sky-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="28"
-            height="28"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="text-primary"
-            [innerHTML]="feature.icon | safeHtml"
-          ></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
         </div>
-        <h3 class="text-xl font-bold text-foreground mb-3">{{ feature.title }}</h3>
-        <p class="text-muted-foreground leading-relaxed">{{ feature.description }}</p>
+        <h3 class="text-xl font-bold text-foreground mb-3">Secure Bookings</h3>
+        <p class="text-muted-foreground leading-relaxed">Your data is protected with our end-to-end encryption.</p>
       </div>
+
+      <div
+        class="group p-8 bg-white border border-blue-200/50 rounded-2xl hover:border-blue-400 hover:shadow-lg hover:shadow-blue-300/20 hover:scale-105 transition-all duration-300"
+      >
+        <div
+          class="w-14 h-14 bg-gradient-to-br from-blue-100 to-sky-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600">
+            <path d="M8 2v4"></path><path d="M16 2v4"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect><path d="M3 10h18"></path><path d="m9 16 2 2 4-4"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-foreground mb-3">Easy & Fast Booking</h3>
+        <p class="text-muted-foreground leading-relaxed">Book your ideal guesthouse in just a few simple clicks.</p>
+      </div>
+
+      <div
+        class="group p-8 bg-white border border-blue-200/50 rounded-2xl hover:border-blue-400 hover:shadow-lg hover:shadow-blue-300/20 hover:scale-105 transition-all duration-300"
+      >
+        <div
+          class="w-14 h-14 bg-gradient-to-br from-blue-100 to-sky-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600">
+            <path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line>
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-foreground mb-3">Best Price Guarantee</h3>
+        <p class="text-muted-foreground leading-relaxed">We ensure you get the best value for your money.</p>
+      </div>
+
+      <div
+        class="group p-8 bg-white border border-blue-200/50 rounded-2xl hover:border-blue-400 hover:shadow-lg hover:shadow-blue-300/20 hover:scale-105 transition-all duration-300"
+      >
+        <div
+          class="w-14 h-14 bg-gradient-to-br from-blue-100 to-sky-100 rounded-xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-blue-600">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+          </svg>
+        </div>
+        <h3 class="text-xl font-bold text-foreground mb-3">24/7 Support</h3>
+        <p class="text-muted-foreground leading-relaxed">Our support team is available around the clock to assist you.</p>
+      </div>
+
     </div>
   </div>
 </section>
 
-<footer class="bg-foreground text-background py-16 px-4 sm:px-6 lg:px-8">
+<footer class="bg-gradient-to-br from-blue-950 to-sky-950 text-white py-16 px-4 sm:px-6 lg:px-8">
   <div class="max-w-7xl mx-auto">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
       <div>
         <div class="flex items-center gap-2 mb-4">
           <div
-            class="w-10 h-10 bg-gradient-to-br from-accent to-secondary rounded-lg flex items-center justify-center"
+            class="w-10 h-10 bg-gradient-to-br from-blue-400 to-sky-400 rounded-lg flex items-center justify-center"
           >
-            <span class="text-foreground font-bold text-lg">GH</span>
+            <span class="text-blue-950 font-bold text-lg">GH</span>
           </div>
           <span class="font-bold text-xl">GuestHouse Bookings</span>
         </div>
-        <div>
-        <p class="text-background/70 text-sm leading-relaxed">
+        <p class="text-blue-200/70 text-sm leading-relaxed">
           Your reliable platform for booking approved guesthouse stays.
-        </p>  </div>
+        </p>
       </div>
 
       <div>
         <h4 class="font-bold text-lg mb-4">Quick Links</h4>
         <ul class="space-y-2 text-sm">
           <li>
-            <a href="#" class="text-background/70 hover:text-background transition-colors">Home</a>
+            <a href="#" class="text-blue-200 hover:text-white transition-colors">Home</a>
           </li>
           <li>
-            <a href="#" class="text-background/70 hover:text-background transition-colors">
+            <a href="#" class="text-blue-200 hover:text-white transition-colors">
               Guesthouses
             </a>
           </li>
           <li>
-            <a href="#" class="text-background/70 hover:text-background transition-colors">
+            <a href="#" class="text-blue-200 hover:text-white transition-colors">
               My Bookings
             </a>
           </li>
           <li>
-            <a href="#" class="text-background/70 hover:text-background transition-colors">
+            <a href="#" class="text-blue-200 hover:text-white transition-colors">
               Support
             </a>
           </li>
@@ -388,20 +484,20 @@
         <h4 class="font-bold text-lg mb-4">Support</h4>
         <ul class="space-y-2 text-sm">
           <li>
-            <a href="#" class="text-background/70 hover:text-background transition-colors">
+            <a href="#" class="text-blue-200 hover:text-white transition-colors">
               Contact Us
             </a>
           </li>
           <li>
-            <a href="#" class="text-background/70 hover:text-background transition-colors">FAQ</a>
+            <a href="#" class="text-blue-200 hover:text-white transition-colors">FAQ</a>
           </li>
           <li>
-            <a href="#" class="text-background/70 hover:text-background transition-colors">
+            <a href="#" class="text-blue-200 hover:text-white transition-colors">
               Privacy Policy
             </a>
           </li>
           <li>
-            <a href="#" class="text-background/70 hover:text-background transition-colors">
+            <a href="#" class="text-blue-200 hover:text-white transition-colors">
               Terms & Conditions
             </a>
           </li>
@@ -413,7 +509,7 @@
         <div class="flex gap-4">
           <a
             href="#"
-            class="w-10 h-10 bg-background/20 rounded-lg flex items-center justify-center hover:bg-background/40 transition-colors"
+            class="w-10 h-10 bg-transparent border border-blue-700/50 rounded-lg flex items-center justify-center hover:bg-blue-700 transition-colors"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -425,14 +521,13 @@
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
-              class="lucide lucide-facebook"
             >
               <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
             </svg>
           </a>
           <a
             href="#"
-            class="w-10 h-10 bg-background/20 rounded-lg flex items-center justify-center hover:bg-background/40 transition-colors"
+            class="w-10 h-10 bg-transparent border border-blue-700/50 rounded-lg flex items-center justify-center hover:bg-blue-700 transition-colors"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -444,7 +539,6 @@
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
-              class="lucide lucide-twitter"
             >
               <path
                 d="M22 4s-.7 2.1-2 3.4c1.6 1.4 3.3 4.3 3.3 4.3s-3.1-.8-4.7-1.5c-1.4 4.3-6.5 7-12.2 7-1.1 0-2.2-.2-3.2-.5 2.5 1.1 5 1.6 7.5 1.6 6.5 0 10.8-5.5 10.8-10.8 0-.2 0-.5 0-.7 1-1.1 1.8-2.2 2.6-3.4"
@@ -453,7 +547,7 @@
           </a>
           <a
             href="#"
-            class="w-10 h-10 bg-background/20 rounded-lg flex items-center justify-center hover:bg-background/40 transition-colors"
+            class="w-10 h-10 bg-transparent border border-blue-700/50 rounded-lg flex items-center justify-center hover:bg-blue-700 transition-colors"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -465,19 +559,17 @@
               stroke-width="2"
               stroke-linecap="round"
               stroke-linejoin="round"
-              class="lucide lucide-instagram"
             >
               <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
               <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-              <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
             </svg>
           </a>
         </div>
       </div>
     </div>
 
-    <div class="border-t border-background/20 pt-8">
-      <div class="flex flex-col md:flex-row items-center justify-between text-sm text-background/70">
+    <div class="border-t border-blue-800 pt-8">
+      <div class="flex flex-col md:flex-row items-center justify-between text-sm text-blue-200/70">
         <p>&copy; 2025 GuestHouse Bookings. All rights reserved.</p>
         <p>Crafted with 🛌 for your comfort</p>
       </div>

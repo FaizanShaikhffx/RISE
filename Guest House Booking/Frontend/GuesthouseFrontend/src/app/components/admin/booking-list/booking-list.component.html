@@ -1,59 +1,83 @@
-<div class="container mx-auto p-4">
-  <div class="flex justify-between items-center mb-4">
-    <h1 class="text-3xl font-bold">Manage All Bookings</h1>
+<div class="container mx-auto max-w-7xl">
+  <div class="flex justify-between items-center mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">Manage All Bookings</h1>
   </div>
 
-  <div *ngIf="bookings.length > 0; else noBookings" class="bg-white border border-gray-200 shadow-md rounded overflow-x-auto">
+  <div *ngIf="!bookings || bookings.length === 0" class="bg-white p-12 rounded-2xl shadow-lg border border-gray-100 text-center">
+    <h2 class="text-2xl font-semibold text-gray-700 mb-2">No bookings found.</h2>
+    <p class="text-gray-500">As users submit new bookings, they will appear here.</p>
+  </div>
+
+  <div *ngIf="bookings && bookings.length > 0" class="bg-white border border-gray-100 shadow-lg rounded-2xl overflow-hidden">
     <table class="min-w-full">
-      <thead class="bg-gray-800 text-white">
+      <thead class="bg-gray-50 border-b border-gray-200">
         <tr>
-          <th class="py-2 px-4 text-left">User</th>
-          <th class="py-2 px-4 text-left">Guesthouse / Bed</th>
-          <th class="py-2 px-4 text-left">Room</th>
-          <th class="py-2 px-4 text-left">Dates</th>
-          <th class="py-2 px-4 text-left">Status</th>
-          <th class="py-2 px-4 text-left">Actions</th>
+          <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+            Booking Details
+          </th>
+          <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+            User
+          </th>
+          <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+            Dates
+          </th>
+          <th scope="col" class="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">
+            Status
+          </th>
+          <th scope="col" class="px-6 py-4 text-right text-xs font-bold text-gray-500 uppercase tracking-wider">
+            Actions
+          </th>
         </tr>
       </thead>
       <tbody class="divide-y divide-gray-200">
-        <tr *ngFor="let b of bookings" class="hover:bg-gray-50">
-          <td class="py-2 px-4">{{ b.userName }}</td>
-          <td class="py-2 px-4">{{ b.guestHouseName }} / {{ b.bedNumber }}</td>
-          <td class="py-2 px-4">{{ b.roomName }}</td>
-          <td class="py-2 px-4">
-            {{ b.dateFrom | date: 'shortDate' }} - {{ b.dateTo | date: 'shortDate' }}
+        
+        <tr *ngFor="let b of bookings" class="hover:bg-gray-50 transition-colors">
+          
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-semibold text-gray-900">{{ b.guestHouseName }}</div>
+            <div class="text-sm text-gray-500">{{ b.roomName }} / Bed {{ b.bedNumber }}</div>
           </td>
-          <td class="py-2 px-4 font-medium"
-              [class.text-yellow-600]="b.status === 'Pending'"
-              [class.text-green-600]="b.status === 'Approved'"
-              [class.text-red-600]="b.status === 'Rejected'">
-            {{ b.status }}
+
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm font-semibold text-gray-900">{{ b.userName }}</div>
+            <div class="text-sm text-gray-500">Booked: {{ b.createdDate | date: 'short' }}</div>
           </td>
-          <td class="py-2 px-4">
+
+          <td class="px-6 py-4 whitespace-nowrap">
+            <div class="text-sm text-gray-900">
+              {{ b.dateFrom | date: 'dd/MM/yyyy' }} - {{ b.dateTo | date: 'dd/MM/yyyy' }}
+            </div>
+          </td>
+
+          <td class="px-6 py-4 whitespace-nowrap">
+            <span class="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full"
+                  [ngClass]="{
+                    'bg-yellow-100 text-yellow-800': b.status === 'Pending',
+                    'bg-green-100 text-green-800': b.status === 'Approved',
+                    'bg-red-100 text-red-800': b.status === 'Rejected'
+                  }">
+              {{ b.status }}
+            </span>
+            <p *ngIf="b.status === 'Rejected'" class="text-sm text-red-600 mt-1 truncate" title="{{b.remarks}}">
+              {{ b.remarks }}
+            </p>
+          </td>
+
+          <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
             <ng-container *ngIf="b.status === 'Pending'">
               <button (click)="onApprove(b.bookingId)" 
-                      class="bg-green-500 hover:bg-green-700 text-white py-1 px-3 rounded text-sm">
+                      class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-3 rounded-lg text-xs shadow-md transition transform hover:scale-105">
                 Approve
               </button>
               <button (click)="onReject(b.bookingId)" 
-                      class="bg-red-500 hover:bg-red-700 text-white py-1 px-3 rounded text-sm ml-2">
+                      class="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-3 rounded-lg text-xs shadow-md transition transform hover:scale-105 ml-2">
                 Reject
               </button>
             </ng-container>
-            <span *ngIf="b.status === 'Rejected'" class="text-sm text-gray-500">
-              {{ b.remarks }}
-            </span>
           </td>
         </tr>
+        
       </tbody>
     </table>
   </div>
-
-  <ng-template #noBookings>
-    <div class="bg-white p-6 rounded shadow-md border text-center">
-      <h2 class="text-xl text-gray-600">No bookings found.</h2>
-      <p class="text-gray-500">As users submit new bookings, they will appear here.</p>
-    </div>
-  </ng-template>
-
 </div>

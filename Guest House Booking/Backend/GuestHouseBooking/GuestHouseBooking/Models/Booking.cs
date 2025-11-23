@@ -28,11 +28,10 @@ namespace GuestHouseBooking.Models
         [Required]
         public DateTime DateTo { get; set; }
 
-        // Status: "Pending", "Approved", "Rejected"
         public string Status { get; set; } = "Pending";
 
         [MaxLength(500)]
-        public string Remarks { get; set; } // Reason for rejection, etc.
+        public string Remarks { get; set; } 
 
         public bool Deleted { get; set; } = false;
         public DateTime CreatedDate { get; set; } = DateTime.UtcNow;

@@ -1,6 +1,18 @@
 <form [formGroup]="userForm">
 
-  <div>
+
+  <label for="age"></label>
+  <input type="text" id="age" formControlName="age">
+
+  <div *ngIf="userAge?.invalid && (userAge?.dirty || userAge?.touched)">
+    <div *ngIf="userAge?.errors?.['required']">
+        Age is required
+    </div>
+  </div>
+
+
+
+  <!-- <div>
     <label for="name">Name</label>
     <input type="text" id="name" formControlName="name">
   </div>
@@ -13,6 +25,6 @@
       minimum 3 character are required
     </div>
 
-  </div>
+  </div> -->
 
 </form>

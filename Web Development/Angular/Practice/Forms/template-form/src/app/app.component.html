@@ -1,5 +1,27 @@
   <form #userForm="ngForm">
     <div>
+
+      <label for="user">User</label>
+      <input type="text"
+      id="user"
+      name="user"
+      required
+      minlength="4"
+      [(ngModel)]="user"
+      #userName="ngModel"
+      >
+
+      <div *ngIf="userName.invalid && (userName.dirty || userName.touched)">
+        <div *ngIf="userName.errors?.['required']">
+          Name is required
+        </div>
+        <div *ngIf="userName.errors?.['minlength']">
+          Minimum char required
+        </div>
+
+      </div>
+
+
       <label for="name">Name</label>
       <input type="text"
         id="name"

@@ -14,8 +14,7 @@ namespace GuestHouseBooking.Models
         public string RoomName { get; set; }
 
         [Required]
-        public string GenderAllowed { get; set; } // "Male", "Female", "Any"
-
+        public string GenderAllowed { get; set; } 
         public ICollection<Bed> Beds { get; set; }
 
         public bool Deleted { get; set; } = false;

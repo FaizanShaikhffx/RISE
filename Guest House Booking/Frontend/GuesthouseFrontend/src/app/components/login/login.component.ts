@@ -41,7 +41,7 @@ export class LoginComponent {
           this.router.navigate(['/admin-dashboard']);
         } else {
           // 2. If user is a regular User, go to their "My Bookings" page
-          this.router.navigate(['/my-bookings']); 
+          this.router.navigate(['/new-booking']); 
         }
       },
       error: (err) => {

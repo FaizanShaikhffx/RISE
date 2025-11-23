@@ -18,7 +18,7 @@ namespace GuestHouseBooking.DTOs
     public class BookingDto
     {
         public int BookingId { get; set; }
-        public string UserName { get; set; } // User's name
+        public string UserName { get; set; } 
         public string GuestHouseName { get; set; }
         public string RoomName { get; set; }
         public string BedNumber { get; set; }

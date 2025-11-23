@@ -19,8 +19,10 @@ namespace GuestHouseBooking.Services
                 Action = action,
                 UserId = userId,
                 Timestamp = DateTime.UtcNow,
-                NewValue = newValue,
-                OldValue = oldValue
+
+                
+                NewValue = newValue ?? string.Empty,
+                OldValue = oldValue ?? string.Empty
             };
 
             _context.AuditLogs.Add(log);

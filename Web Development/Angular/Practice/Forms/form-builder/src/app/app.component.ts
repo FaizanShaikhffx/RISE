@@ -7,15 +7,31 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  userForm: FormGroup; 
-  
+
+  userForm: FormGroup;
+
+
   constructor(private fb: FormBuilder){
-    this.userForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]]
+    this.userForm = fb.group({
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      age: ['', [Validators.required, Validators.minLength(2)]]
     })
   }
 
-  get Name(){
-    return this.userForm.get('name')!; 
+  get userAge(){
+    return this.userForm.get('age'); 
   }
+
+
+  // userForm: FormGroup; 
+  
+  // constructor(private fb: FormBuilder){
+  //   this.userForm = this.fb.group({
+  //     name: ['', [Validators.required, Validators.minLength(3)]]
+  //   })
+  // }
+
+  // get Name(){
+  //   return this.userForm.get('name')!; 
+  // }
 }

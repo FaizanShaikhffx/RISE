@@ -1,5 +1,7 @@
 import { Component, HostListener, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Router } from '@angular/router'; // <-- 1. IMPORT THE ROUTER
+import { AuthService } from 'src/app/services/auth.service';
 
 // A custom pipe to render SVG strings safely
 @Pipe({ name: 'safeHtml' })
@@ -13,7 +15,6 @@ export class SafeHtmlPipe implements PipeTransform {
 @Component({
   selector: 'app-hero-page',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss'],
 })
 export class HeroPageComponent implements OnInit {
   // --- State for Header ---
@@ -113,9 +114,26 @@ export class HeroPageComponent implements OnInit {
     },
   ];
 
-  constructor() {}
+  constructor(
+      private authService: AuthService,
+      private router: Router
+  ) {} 
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // Check if the user is logged in
+    if (this.authService.isLoggedIn()) {
+      const role = this.authService.getRole();
+
+      if (role === 'Admin') {
+        // If Admin, redirect to Admin Dashboard
+        this.router.navigate(['/admin/dashboard']);
+      } else if (role === 'User') {
+        // If User, redirect to New Booking page
+        this.router.navigate(['/new-booking']);
+      }
+    }
+    // If not logged in, this code is skipped and the homepage loads normally.
+  }
 
   // --- HostListener for Header scroll detection ---
   @HostListener('window:scroll', [])

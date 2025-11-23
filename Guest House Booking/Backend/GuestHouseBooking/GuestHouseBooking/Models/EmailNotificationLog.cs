@@ -6,7 +6,7 @@ namespace GuestHouseBooking.Models
     {
         [Key]
         public int NotificationId { get; set; }
-        public int? BookingId { get; set; } // Link to booking if applicable
+        public int? BookingId { get; set; }
         public string ToEmail { get; set; } = null!;
         public string? Subject { get; set; }
         public DateTime? SentDate { get; set; }

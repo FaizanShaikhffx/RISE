@@ -88,9 +88,7 @@ namespace GuestHouseBooking.Controllers
             {
                 RoomId = dto.RoomId,
                 BedNumber = dto.BedNumber,
-                // We set 'CreatedBy' here, but it's not in the Bed model.
-                // You can add it if you want, or just omit it.
-                // Let's assume the Bed model doesn't need audit fields for simplicity.
+              
             };
 
             _context.Beds.Add(bed);
@@ -108,7 +106,6 @@ namespace GuestHouseBooking.Controllers
             return CreatedAtAction(nameof(GetBed), new { id = bed.BedId }, resultDto);
         }
 
-        // PUT: api/bed/5
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBed(int id, [FromBody] BedCreateDto dto)
         {
@@ -131,10 +128,9 @@ namespace GuestHouseBooking.Controllers
             string newVal = $"BedNumber: {dto.BedNumber}, RoomID: {dto.RoomId}";
             await _auditLog.LogAction("Update Bed", currentUserId, newVal, oldVal);
 
-            return NoContent(); // Success
+            return NoContent(); 
         }
 
-        // DELETE: api/bed/5 (Soft Delete)
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBed(int id)
         {
@@ -146,18 +142,16 @@ namespace GuestHouseBooking.Controllers
 
             var currentUserId = _userResolver.GetUserId();
 
-            // --- SOFT DELETE ---
+            //  SOFT DELETE
             bed.Deleted = true;
-            // Add DeletedBy/DeletedDate fields to your Bed model
-            // if you want to track this, just like in GuestHouse/Room.
-            // e.g., bed.DeletedBy = currentUserId;
+           
 
             _context.Entry(bed).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             await _auditLog.LogAction("Soft Delete Bed", currentUserId, $"BedID: {id} marked as deleted", null);
 
-            return NoContent(); // Success
+            return NoContent(); 
         }
     }
 }

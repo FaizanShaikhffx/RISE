@@ -1,0 +1,64 @@
+<div class="w-64 bg-white shadow-lg h-full flex-col hidden md:flex">
+  
+  <div class="h-20 flex items-center px-6 border-b border-gray-200">
+    <a routerLink="/admin" class="text-2xl font-bold text-blue-600">
+      <!-- Rishabh Guest House -->
+      <img src="../../../../assets/logo.svg" alt="Logo" class="h-8 w-auto">
+
+    </a>
+  </div>
+
+  <nav class="flex-1 overflow-y-auto py-6">
+    <ul class="space-y-2">
+      <li>
+        <a routerLink="/admin/dashboard" routerLinkActive="active"
+           class="nav-link">
+          <span class="ml-3">Dashboard</span>
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/admin/guesthouses" routerLinkActive="active"
+           class="nav-link">
+          <span class="ml-3">Guest House</span>
+        </a>
+      </li>
+
+      <!-- <li>
+        <a routerLink="/admin/rooms" routerLinkActive="active"
+           class="nav-link">
+          <span class="ml-3">Room Management</span>
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/admin/beds" routerLinkActive="active"
+           class="nav-link">
+          <span class="ml-3">Bed Management</span>
+        </a>
+      </li> -->
+
+      <li>
+        <a routerLink="/admin/bookings" routerLinkActive="active"
+           class="nav-link">
+          <span class="ml-3">Booking Management</span>
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/admin/create-user" routerLinkActive="active"
+           class="nav-link">
+          <span class="ml-3">Create User</span>
+        </a>
+      </li>
+
+      <li>
+        <a routerLink="/admin/audit-logs" routerLinkActive="active"
+           class="nav-link">
+          <span class="ml-3">Audit Logs</span>
+        </a>
+      </li>
+
+    </ul>
+  </nav>
+</div>

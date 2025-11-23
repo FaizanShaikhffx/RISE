@@ -43,4 +43,7 @@ export class BedService {
   delete(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
+  getAllByRoom(roomId: number): Observable<BedDto[]> {
+    return this.http.get<BedDto[]>(`${environment.apiUrl}/Bed/by-room/${roomId}`);
+  }
 }

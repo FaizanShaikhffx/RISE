@@ -13,13 +13,13 @@ namespace GuestHouseBooking.Models
         public string Email { get; set; }
 
         [Required]
-        public string PasswordHash { get; set; } // We will store the HASH, not the password
+        public string PasswordHash { get; set; } 
 
         [Required]
-        public string Gender { get; set; } // Male / Female
+        public string Gender { get; set; }
 
         [Required]
-        public string Role { get; set; } // We will manually set this to "Admin" or "User"
+        public string Role { get; set; } 
 
         [Required]
         public bool IsActive { get; set; } = true;

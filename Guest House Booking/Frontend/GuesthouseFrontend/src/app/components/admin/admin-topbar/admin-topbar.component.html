@@ -1,0 +1,14 @@
+<header class="h-20 bg-white border-b border-gray-200 flex items-center justify-end px-6">
+  <div class="flex items-center space-x-6">
+    
+    
+    <span class="text-gray-700">
+      Welcome, <span class="font-semibold">{{ adminName }}</span>!
+    </span>
+
+    <button (click)="logout()" 
+            class="text-gray-600 font-medium hover:text-red-600 transition-colors">
+      Logout
+    </button>
+  </div>
+</header>

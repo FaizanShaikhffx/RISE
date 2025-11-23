@@ -1,4 +1,7 @@
-<h1>Welcome to angular Services</h1>
-<app-student-list></app-student-list>
-<hr>
-<app-student-data></app-student-data>
+<div class="parent">
+
+  <div class="posts" *ngFor="let i of data">
+    <h2>{{i.id}}</h2>
+    <p>{{i.title}}</p>
+  </div>
+</div>

@@ -20,6 +20,12 @@ import { BedListComponent } from './components/admin/bed-list/bed-list.component
 import { BedFormComponent } from './components/admin/bed-form/bed-form.component';
 import { UserFormComponent } from './components/admin/user-form/user-form.component';
 import { NewBookingComponent } from './components/new-booking/new-booking.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { AdminLayoutComponent } from './components/admin/admin-layout/admin-layout.component';
+import { AdminSidebarComponent } from './components/admin/admin-sidebar/admin-sidebar.component';
+import { AdminTopbarComponent } from './components/admin/admin-topbar/admin-topbar.component';
+import { AuditLogComponent } from './components/admin/audit-log/audit-log.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +44,13 @@ import { NewBookingComponent } from './components/new-booking/new-booking.compon
     BedListComponent,
     BedFormComponent,
     UserFormComponent,
-    NewBookingComponent
+    NewBookingComponent,
+    ForgotPasswordComponent,
+    ResetPasswordComponent,
+    AdminLayoutComponent,
+    AdminSidebarComponent,
+    AdminTopbarComponent,
+    AuditLogComponent
   ],
   imports: [
     BrowserModule,

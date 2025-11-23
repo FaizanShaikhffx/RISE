@@ -9,7 +9,7 @@ namespace GuestHouseBooking.DTOs
         [Required]
         public string RoomName { get; set; }
         [Required]
-        public string GenderAllowed { get; set; } // "Male", "Female", "Any"
+        public string GenderAllowed { get; set; } 
     }
     public class RoomDto
     {

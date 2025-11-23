@@ -50,7 +50,7 @@ namespace GuestHouseBooking.Controllers
                 Token = token,
                 UserName = user.UserName,
                 Role = user.Role,
-                Gender = user.Gender // <-- ADD THIS LINE
+                Gender = user.Gender
             };
 
             return Ok(response);
@@ -103,7 +103,7 @@ namespace GuestHouseBooking.Controllers
                 await _context.SaveChangesAsync();
 
                 return Ok(new { message = $"User {user.UserName} created and email sent." });
-            }
+        }
 
 
             private string GenerateJwtToken(User user) {
@@ -154,5 +154,85 @@ namespace GuestHouseBooking.Controllers
 
         }
 
+       
+        [HttpPost("forgot-password")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordDto dto)
+        {
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email && !u.Deleted);
+            if (user == null)
+            {
+                
+                return Ok(new { message = "If an account with this email exists, an OTP has been sent." });
+            }
+
+            var otp = new Random().Next(100000, 999999).ToString();
+
+            var passwordResetOtp = new PasswordResetOtp
+            {
+                Email = dto.Email,
+                Otp = otp,
+                ExpiryTime = DateTime.UtcNow.AddMinutes(10) 
+            };
+
+            _context.PasswordResetOtps.Add(passwordResetOtp);
+            await _context.SaveChangesAsync();
+
+            try
+            {
+                var emailBody = $"Your password reset OTP is: <b>{otp}</b><br><br>" +
+                                $"This OTP will expire in 10 minutes.";
+                await _emailService.SendEmailAsync(dto.Email, "Your Password Reset OTP", emailBody);
+
+                _context.EmailNotificationLogs.Add(new EmailNotificationLog
+                {
+                    ToEmail = dto.Email,
+                    Subject = "Your Password Reset OTP",
+                    SentDate = DateTime.UtcNow
+                });
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Failed to send OTP email: {ex.Message}");
+            }
+
+            return Ok(new { message = "If an account with this email exists, an OTP has been sent." });
+        }
+
+
+        [HttpPost("reset-password")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDto dto)
+        {
+            var otpEntry = await _context.PasswordResetOtps
+                .FirstOrDefaultAsync(o => o.Email == dto.Email && o.Otp == dto.Otp);
+
+            if (otpEntry == null)
+            {
+                return BadRequest(new { message = "Invalid or expired OTP." });
+            }
+
+            if (otpEntry.ExpiryTime < DateTime.UtcNow)
+            {
+                _context.PasswordResetOtps.Remove(otpEntry); 
+                await _context.SaveChangesAsync();
+                return BadRequest(new { message = "Invalid or expired OTP." });
+            }
+
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
+            if (user == null)
+            {
+                return BadRequest(new { message = "Invalid request." });
+            }
+
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NewPassword);
+
+            _context.PasswordResetOtps.Remove(otpEntry);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Password reset successful. You can now log in." });
+        }
     }
 }

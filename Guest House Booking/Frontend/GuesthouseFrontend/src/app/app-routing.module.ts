@@ -14,107 +14,68 @@ import { BedListComponent } from './components/admin/bed-list/bed-list.component
 import { BedFormComponent } from './components/admin/bed-form/bed-form.component';
 import { UserFormComponent } from './components/admin/user-form/user-form.component';
 import { NewBookingComponent } from './components/new-booking/new-booking.component';
+import { ForgotPasswordComponent } from './components/forgot-password/forgot-password.component';
+import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
+import { AdminLayoutComponent } from './components/admin/admin-layout/admin-layout.component';
+import { AuditLogComponent } from './components/admin/audit-log/audit-log.component';
 
 const routes: Routes = [
+  // --- Public Routes ---
   { path: '', component: HeroPageComponent },
-
   { path: 'login', component: LoginComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
+  { path: 'reset-password', component: ResetPasswordComponent },
 
-  // --- Protected User Route ---
+  // --- Protected User Routes ---
   {
     path: 'my-bookings',
     component: MyBookingsComponent,
-    canActivate: [authGuard], // <-- Use the guard
+    canActivate: [authGuard],
+    data: { role: 'User' }
+  },
+  {
+    path: 'new-booking', 
+    component: NewBookingComponent,
+    canActivate: [authGuard],
+    data: { role: 'User' }
   },
 
-  // --- Protected Admin Route ---
- {
-    path: 'admin-dashboard',
-    component: AdminDashboardComponent,
+  // --- NEW Admin Layout Route ---
+  // All admin pages will now live inside this "shell"
+  {
+    path: 'admin',
+    component: AdminLayoutComponent,
     canActivate: [authGuard],
-    data: { role: 'Admin' }
+    data: { role: 'Admin' }, // This guard protects ALL child routes
+    children: [
+      { path: 'dashboard', component: AdminDashboardComponent },
+      
+      { path: 'guesthouses', component: GuesthouseListComponent },
+      { path: 'guesthouse/new', component: GuesthouseFormComponent },
+      { path: 'guesthouse/edit/:id', component: GuesthouseFormComponent },
+      
+      { path: 'rooms', component: RoomListComponent },
+      { path: 'room/new', component: RoomFormComponent },
+      { path: 'room/edit/:id', component: RoomFormComponent },
+      
+      { path: 'beds', component: BedListComponent },
+      { path: 'bed/new', component: BedFormComponent },
+      { path: 'bed/edit/:id', component: BedFormComponent },
+      
+      { path: 'bookings', component: BookingListComponent },
+      { path: 'create-user', component: UserFormComponent },
+
+      { path: 'audit-logs', component: AuditLogComponent }, // <-- 2. ADD THE ROUTE
+      
+      // { path: 'audit-logs', component: AuditLogComponent }, // Add this when ready
+      
+      // Redirects /admin to /admin/dashboard
+      { path: '', redirectTo: 'dashboard', pathMatch: 'full' } 
+    ]
   },
-  {
-  path: 'admin/create-user',
-  component: UserFormComponent,
-  canActivate: [authGuard],
-  data: { role: 'Admin' }
-  },
-  {
-    path: 'admin/guesthouses',
-    component: GuesthouseListComponent,
-    canActivate: [authGuard],
-    data: { role: 'Admin' }
-  },
-  {
-    path: 'admin/guesthouse/new', // Create
-    component: GuesthouseFormComponent,
-    canActivate: [authGuard],
-    data: { role: 'Admin' }
-  },
-  {
-    path: 'admin/guesthouse/edit/:id', // Edit
-    component: GuesthouseFormComponent,
-    canActivate: [authGuard],
-    data: { role: 'Admin' }
-  },
-  {
-  path: 'admin/rooms',
-  component: RoomListComponent,
-  canActivate: [authGuard],
-  data: { role: 'Admin' }
-},
-{
-  path: 'admin/room/new',
-  component: RoomFormComponent,
-  canActivate: [authGuard],
-  data: { role: 'Admin' }
-},
-{
-  path: 'admin/room/edit/:id',
-  component: RoomFormComponent,
-  canActivate: [authGuard],
-  data: { role: 'Admin' }
-},
-{
-  path: 'admin/bookings',
-  component: BookingListComponent,
-  canActivate: [authGuard],
-  data: { role: 'Admin' }
-},
-{
-  path: 'admin/beds',
-  component: BedListComponent,
-  canActivate: [authGuard],
-  data: { role: 'Admin' }
-},
-{
-  path: 'admin/bed/new',
-  component: BedFormComponent,
-  canActivate: [authGuard],
-  data: { role: 'Admin' }
-},
-{
-  path: 'admin/bed/edit/:id',
-  component: BedFormComponent,
-  canActivate: [authGuard],
-  data: { role: 'Admin' }
-},
-{
-  path: 'my-bookings',
-  component: MyBookingsComponent,
-  canActivate: [authGuard],
-  data: { role: 'User' } // <-- Fix
-},
-{
-  path: 'new-booking', 
-  component: NewBookingComponent,
-  canActivate: [authGuard],
-  data: { role: 'User' } // <-- Fix
-},
-  // Redirect any other route to home
+
+  // --- Wildcard Route (MUST BE LAST) ---
   { path: '**', redirectTo: '' },
-
 ];
 
 @NgModule({

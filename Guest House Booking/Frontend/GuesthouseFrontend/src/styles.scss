@@ -1,4 +1,17 @@
-/* You can add global styles to this file, and also import other style files */
+/* Add this to your main src/styles.css file */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* This styles the "active" sidebar link like in your image */
+.nav-link {
+  @apply flex items-center px-6 py-3 text-gray-600 font-medium transition-all duration-200;
+}
+
+.nav-link:hover {
+  @apply bg-gray-100 text-gray-900;
+}
+
+.nav-link.active {
+  @apply bg-blue-50 text-blue-600 border-r-4 border-blue-600;
+}
