@@ -26,6 +26,7 @@ import { AdminLayoutComponent } from './components/admin/admin-layout/admin-layo
 import { AdminSidebarComponent } from './components/admin/admin-sidebar/admin-sidebar.component';
 import { AdminTopbarComponent } from './components/admin/admin-topbar/admin-topbar.component';
 import { AuditLogComponent } from './components/admin/audit-log/audit-log.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { AuditLogComponent } from './components/admin/audit-log/audit-log.compon
     AdminLayoutComponent,
     AdminSidebarComponent,
     AdminTopbarComponent,
-    AuditLogComponent
+    AuditLogComponent,
+    UserProfileComponent
   ],
   imports: [
     BrowserModule,

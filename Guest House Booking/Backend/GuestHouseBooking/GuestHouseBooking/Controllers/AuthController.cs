@@ -5,6 +5,7 @@ using GuestHouseBooking.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -19,10 +20,12 @@ namespace GuestHouseBooking.Controllers
         private readonly ApplicationDbContext _context;
         private readonly IEmailService _emailService;
         private readonly IConfiguration _config;
-        public AuthController(ApplicationDbContext context, IEmailService emailService, IConfiguration config) {
+        private readonly UserResolverService _userResolver;
+        public AuthController(ApplicationDbContext context, IEmailService emailService, IConfiguration config, UserResolverService userResolver) {
             _context = context;
             _emailService = emailService;
             _config = config;
+            _userResolver = userResolver; // <-- Assigned it here
         }
 
         [HttpPost("login")]
@@ -79,7 +82,7 @@ namespace GuestHouseBooking.Controllers
                 PasswordHash = hashedPassword,
                 IsActive = true,
                 CreatedDate = DateTime.UtcNow,
-                CreatedBy = 0
+                CreatedBy = _userResolver.GetUserId()   
             };
 
             _context.Users.Add(user);
@@ -105,8 +108,61 @@ namespace GuestHouseBooking.Controllers
                 return Ok(new { message = $"User {user.UserName} created and email sent." });
         }
 
+        [HttpPut("update-profile")]
+        [Authorize] // Any logged-in user can call this
+        public async Task<IActionResult> UpdateProfile([FromBody] UserUpdateDto dto)
+        {
+            var userId = _userResolver.GetUserId(); // Get ID from current token
+            var user = await _context.Users.FindAsync(userId);
 
-            private string GenerateJwtToken(User user) {
+            if (user == null) return Unauthorized();
+
+            // 1. Check if new email is taken by SOMEONE ELSE
+            if (dto.Email != user.Email && await _context.Users.AnyAsync(u => u.Email == dto.Email))
+            {
+                return BadRequest(new { message = "Email is already in use by another account." });
+            }
+
+            // 2. Update fields
+            user.UserName = dto.UserName;
+            user.Email = dto.Email;
+            user.Gender = dto.Gender;
+            // Note: We don't update Password or Role here
+
+            await _context.SaveChangesAsync();
+
+            // 3. Generate a NEW token with updated claims (Name/Email)
+            var newToken = GenerateJwtToken(user);
+
+            // 4. Return the new data so Angular can update the Navbar immediately
+            return Ok(new
+            {
+                message = "Profile updated successfully.",
+                token = newToken,
+                userName = user.UserName,
+                role = user.Role,
+                gender = user.Gender
+            });
+        }
+
+        [HttpGet("profile")]
+        [Authorize]
+        public async Task<IActionResult> GetProfile()
+        {
+            var userId = _userResolver.GetUserId();
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) return Unauthorized();
+
+            return Ok(new
+            {
+                userName = user.UserName,
+                email = user.Email,
+                gender = user.Gender
+            });
+        }
+
+
+        private string GenerateJwtToken(User user) {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 

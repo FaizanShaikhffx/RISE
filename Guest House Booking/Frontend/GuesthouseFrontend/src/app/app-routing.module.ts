@@ -18,6 +18,7 @@ import { ForgotPasswordComponent } from './components/forgot-password/forgot-pas
 import { ResetPasswordComponent } from './components/reset-password/reset-password.component';
 import { AdminLayoutComponent } from './components/admin/admin-layout/admin-layout.component';
 import { AuditLogComponent } from './components/admin/audit-log/audit-log.component';
+import { UserProfileComponent } from './components/user-profile/user-profile.component';
 
 const routes: Routes = [
   // --- Public Routes ---
@@ -42,6 +43,7 @@ const routes: Routes = [
 
   // --- NEW Admin Layout Route ---
   // All admin pages will now live inside this "shell"
+  { path: 'profile',    component: UserProfileComponent, canActivate: [authGuard] },
   {
     path: 'admin',
     component: AdminLayoutComponent,
@@ -66,7 +68,7 @@ const routes: Routes = [
       { path: 'create-user', component: UserFormComponent },
 
       { path: 'audit-logs', component: AuditLogComponent }, // <-- 2. ADD THE ROUTE
-      
+
       // { path: 'audit-logs', component: AuditLogComponent }, // Add this when ready
       
       // Redirects /admin to /admin/dashboard

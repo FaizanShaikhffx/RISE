@@ -8,6 +8,8 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent {
+  
+  profileImage = 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
   // We make authService public so the HTML can access it
   constructor(public authService: AuthService, private router: Router) {}
 

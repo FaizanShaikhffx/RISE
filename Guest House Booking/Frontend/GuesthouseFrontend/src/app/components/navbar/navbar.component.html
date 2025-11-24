@@ -5,13 +5,21 @@
       <div class="flex-1">
         
         <a [routerLink]="user.role === 'Admin' ? '/admin-dashboard' : '/my-bookings'" class="flex items-center gap-2">
-          <img src="assets/logo.svg" alt="Logo" class="h-8 w-auto"></a>
+          <img src="assets/logo.svg" alt="Logo" class="h-8 w-auto">
+        </a>
         
       </div>
 
       <div class="flex space-x-4 items-center">
-        <span class="text-gray-600">Welcome, {{ user.userName }}!</span>
         
+        <a routerLink="/profile" class="flex items-center gap-2 group cursor-pointer">
+          <img [src]="profileImage" alt="Profile" 
+               class="h-8 w-8 rounded-full object-cover border border-blue-200 group-hover:border-blue-600 transition-all duration-200">
+          
+          <span class="text-gray-600 font-semibold group-hover:text-blue-800 transition-colors duration-200">
+            Welcome, {{ user.userName }}!
+          </span>
+        </a>
         <ng-container *ngIf="user.role === 'Admin'; else userLinks">
           <a routerLink="/admin/guesthouses" class="text-blue-600 hover:text-blue-800 font-semibold transition-colors duration-200 ml-4">Manage Guesthouses</a>
           <a routerLink="/admin/rooms" class="text-blue-600 hover:text-blue-800 font-semibold transition-colors duration-200 ml-4">Manage Rooms</a>
@@ -32,10 +40,9 @@
 
     <ng-template #loggedOutNav>
       <div class="flex-1">
-
         <a routerLink="/" class="flex items-center gap-2">
-          <img src="assets/logo.svg" alt="Logo" class="h-8 w-auto"> </a>
-
+          <img src="assets/logo.svg" alt="Logo" class="h-8 w-auto"> 
+        </a>
       </div>
       
       <a routerLink="/login" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg font-semibold transition-all duration-300">
