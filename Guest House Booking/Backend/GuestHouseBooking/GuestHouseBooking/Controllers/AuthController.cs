@@ -88,15 +88,11 @@ namespace GuestHouseBooking.Controllers
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            var emailBody = $"Welcome, {user.UserName}!<br><br>" +
-                            $"Your account has been created for the Guesthouse Booking system.<br>" +
-                            $"Your username is: <b>{user.Email}</b><br>" +
-                            $"Your temporary password is: <b>{randomPassword}</b><br><br>" +
-                            $"Please log in and change your password.";
+            string emailBody = EmailTemplates.WelcomeEmail(user.UserName, user.Email, randomPassword);
 
-            await _emailService.SendEmailAsync(user.Email, "Your New Guesthouse Account", emailBody);
+            await _emailService.SendEmailAsync(user.Email, "Welcome to Guesthouse Booking", emailBody);
 
-                _context.EmailNotificationLogs.Add(new EmailNotificationLog
+            _context.EmailNotificationLogs.Add(new EmailNotificationLog
                 {
                     ToEmail = user.Email,
                     Subject = "Your New Guesthouse Account",
@@ -236,9 +232,9 @@ namespace GuestHouseBooking.Controllers
 
             try
             {
-                var emailBody = $"Your password reset OTP is: <b>{otp}</b><br><br>" +
-                                $"This OTP will expire in 10 minutes.";
-                await _emailService.SendEmailAsync(dto.Email, "Your Password Reset OTP", emailBody);
+                string emailBody = EmailTemplates.OtpEmail(otp);
+
+                await _emailService.SendEmailAsync(dto.Email, "Reset Your Password", emailBody);
 
                 _context.EmailNotificationLogs.Add(new EmailNotificationLog
                 {

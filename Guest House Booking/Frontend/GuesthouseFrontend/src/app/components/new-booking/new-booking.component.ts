@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { BookingCreateDto, BookingService, FormBedDto, FormGuestHouseDto, FormRoomDto } from 'src/app/services/booking.service';
+import { BookingService, FormBedDto, FormGuestHouseDto, FormRoomDto, BookingCreateDto } from 'src/app/services/booking.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { DatePipe } from '@angular/common';
+import { ToastrService } from 'ngx-toastr'; // <-- 1. Import Toastr
 
 @Component({
   selector: 'app-new-booking',
@@ -11,12 +12,12 @@ import { DatePipe } from '@angular/common';
   providers: [DatePipe]
 })
 export class NewBookingComponent implements OnInit {
-  step = 1; // 1: Guesthouse, 2: Room, 3: Dates/Beds
+  step = 1; 
 
   // Data
   guesthouses: FormGuestHouseDto[] = [];
-  allRooms: FormRoomDto[] = []; // All rooms for the guesthouse
-  filteredRooms: FormRoomDto[] = []; // Rooms filtered by gender
+  allRooms: FormRoomDto[] = []; 
+  filteredRooms: FormRoomDto[] = []; 
   availableBeds: FormBedDto[] = [];
 
   // Selections
@@ -26,16 +27,18 @@ export class NewBookingComponent implements OnInit {
   // Form
   dateForm: FormGroup;
   availabilityMessage: string | null = null;
-  minDate: string; // To prevent booking past dates
+  minDate: string; 
+
+  loadingBedId: number | null = null; // Tracks which bed is currently processing
 
   constructor(
     private bookingService: BookingService,
     private authService: AuthService,
     private fb: FormBuilder,
     private router: Router,
-    public datePipe: DatePipe
+    public datePipe: DatePipe,
+    private toastr: ToastrService // <-- 2. Inject Toastr
   ) {
-    // Set minimum date for date picker
     this.minDate = new Date().toISOString().split('T')[0];
 
     this.dateForm = this.fb.group({
@@ -44,14 +47,10 @@ export class NewBookingComponent implements OnInit {
     }, { validator: this.dateRangeValidator });
   }
 
-  // Validator to ensure DateTo is after DateFrom
- // ... inside new-booking.component.ts
-
-  // Validator to ensure DateTo is AT LEAST one day AFTER DateFrom
   dateRangeValidator(group: FormGroup) {
     const from = group.get('dateFrom')?.value;
     const to = group.get('dateTo')?.value;
-    if (from && to && new Date(to) <= new Date(from)) { // <-- Use <=
+    if (from && to && new Date(to) <= new Date(from)) {
       return { invalidRange: true };
     }
     return null;
@@ -67,45 +66,35 @@ export class NewBookingComponent implements OnInit {
     });
   }
 
-  // --- Step 1: Guesthouse Selection ---
   selectGuesthouse(guesthouse: FormGuestHouseDto): void {
     this.selectedGuesthouse = guesthouse;
     this.step = 2;
-
     this.bookingService.getRoomsByGuesthouse(guesthouse.guestHouseId).subscribe(data => {
- 
-      // --- FIX FOR GENDER FILTERING ---
-      // This shows ALL rooms, unfiltered.
       this.allRooms = data;
-      this.filteredRooms = data;
+      this.filteredRooms = data; 
     });
   }
 
-  // --- Step 2: Room Selection ---
   selectRoom(room: FormRoomDto): void {
     this.selectedRoom = room;
     this.step = 3;
-    this.dateForm.get('dateFrom')?.patchValue(this.minDate); // Reset date
+    this.dateForm.get('dateFrom')?.patchValue(this.minDate); 
     this.dateForm.get('dateTo')?.patchValue('');
   }
 
-  // --- Step 3: Date & Bed Selection ---
-  // Inside new-booking.component.ts
   checkAvailability(): void {
     if (this.dateForm.invalid || !this.selectedRoom) {
-      // This might be one reason "nothing happens" - the form is invalid
-      this.availabilityMessage = "Please select both a 'From' and 'To' date.";
+      this.availabilityMessage = "Please select valid dates.";
       return;
     }
-
-    // Check for bad date range
+    
     if (this.dateForm.hasError('invalidRange')) {
-      this.availabilityMessage = "'To' date must be after 'From' date.";
+      this.availabilityMessage = "Invalid date range.";
       return;
     }
 
     this.availableBeds = []; 
-    this.availabilityMessage = "Checking..."; // Give user feedback
+    this.availabilityMessage = "Checking availability...";
     
     const { dateFrom, dateTo } = this.dateForm.value;
     const roomId = this.selectedRoom.roomId;
@@ -114,56 +103,55 @@ export class NewBookingComponent implements OnInit {
       next: (beds) => {
         if (beds.length > 0) {
           this.availableBeds = beds;
-          this.availabilityMessage = null; // Success, hide message
+          this.availabilityMessage = null; 
         } else {
           this.availabilityMessage = 'No beds are available for the selected dates.';
         }
       },
-      // --- THIS IS THE FIX ---
-      // Add an error block to catch API failures
       error: (err) => {
         console.error('Failed to check availability', err);
         this.availabilityMessage = 'An error occurred. Please try again.';
+        this.toastr.error('Could not check availability.', 'System Error'); // Toast for error
       }
     });
   }
   
-  // --- Final Step: Submit ---
-// ... inside new-booking.component.ts
-
-  submitBooking(bedId: number): void {
+ submitBooking(bedId: number): void {
     if (!this.selectedGuesthouse || !this.selectedRoom || !this.dateForm.valid) {
       return;
     }
     
+    // Prevent double-clicking
+    if (this.loadingBedId !== null) return;
+
     const { dateFrom, dateTo } = this.dateForm.value;
 
-    // --- THIS IS THE FIX ---
-    // Convert the date strings from the form into real Date objects
-    // before sending them to the service.
     const bookingDto: BookingCreateDto = {
       guestHouseId: this.selectedGuesthouse.guestHouseId,
       roomId: this.selectedRoom.roomId,
       bedId: bedId,
-      dateFrom: new Date(dateFrom + 'T00:00:00Z'), // <-- FIX
-      dateTo: new Date(dateTo + 'T00:00:00Z')   // <-- CONVERT TO DATE
+      dateFrom: new Date(dateFrom + 'T00:00:00Z'), 
+      dateTo: new Date(dateTo + 'T00:00:00Z')      
     };
 
-    if (confirm('Are you sure you want to submit this booking request?')) {
-      this.bookingService.createBooking(bookingDto).subscribe({
-        next: (response: { message: string }) => {
-          alert(response.message);
-          this.router.navigate(['/my-bookings']);
-        },
-        error: (err) => {
-          // This will now show the *real* error from your API's try/catch block
-          alert(err.error?.message || err.error?.details || 'Booking failed. Please try again.');
-          console.error(err);
-        }
-      });
-    }
+    // Set loading state
+    this.loadingBedId = bedId; 
+
+    this.bookingService.createBooking(bookingDto).subscribe({
+      next: (response: { message: string }) => {
+        this.toastr.success(response.message, 'Booking Submitted!'); 
+        this.router.navigate(['/my-bookings']);
+        // No need to reset loadingBedId because we are navigating away
+      },
+      error: (err) => {
+        // Reset loading state on error
+        this.loadingBedId = null; 
+        let msg = err.error?.message || 'Booking failed. Please try again.';
+        this.toastr.error(msg, 'Booking Failed'); 
+      }
+    });
   }
-  // Helper to go back
+
   goBack(toStep: number) {
     this.step = toStep;
     this.availableBeds = [];

@@ -1,64 +1,125 @@
-<div class="container mx-auto p-2">
-  <div class="mb-8">
-    <h1 class="text-4xl font-extrabold text-blue-800">Admin Dashboard</h1>
-    <p class="text-xl text-gray-600 mt-2">Welcome back, <span class="font-bold text-blue-600">{{ adminName }}</span>!</p>
+<div class="container mx-auto max-w-7xl">
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+    <p class="text-gray-500 mt-1">Welcome back, <span class="font-semibold text-blue-600">{{ adminName }}</span>!</p>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
     
-    <div class="bg-white p-6 rounded-2xl shadow-lg border border-blue-200/50 hover:shadow-xl hover:shadow-blue-300/20 transition-all duration-300">
-      <div class="flex items-center">
-        <div class="bg-blue-100 p-3 rounded-full">
-          <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        </div>
-        <div class="ml-4">
-          <p class="text-sm text-gray-500 font-medium">Pending Bookings</p>
-          <p class="text-3xl font-bold text-blue-800">{{ pendingBookingCount }}</p>
-        </div>
+    <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 flex flex-col">
+      <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Total Bookings</p>
+      <div class="mt-auto flex items-baseline">
+        <p class="text-4xl font-extrabold text-blue-600">{{ totalBookings }}</p>
+        <span class="ml-2 text-sm text-gray-400">All time</span>
       </div>
     </div>
 
-    <div class="bg-white p-6 rounded-2xl shadow-lg border border-blue-200/50 hover:shadow-xl hover:shadow-blue-300/20 transition-all duration-300">
-      <div class="flex items-center">
-        <div class="bg-sky-100 p-3 rounded-full">
-          <svg class="w-8 h-8 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-        </div>
-        <div class="ml-4">
-          <p class="text-sm text-gray-500 font-medium">Total Bookings</p>
-          <p class="text-3xl font-bold text-blue-800">{{ totalBookings }}</p>
-        </div>
+    <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 flex flex-col">
+      <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Pending Action</p>
+      <div class="mt-auto flex items-baseline">
+        <p class="text-4xl font-extrabold text-yellow-500">{{ pendingBookingCount }}</p>
+        <span class="ml-2 text-sm text-gray-400">Needs review</span>
       </div>
     </div>
-    
+
+    <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 flex flex-col">
+      <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Approved</p>
+      <div class="mt-auto flex items-baseline">
+        <p class="text-4xl font-extrabold text-green-600">{{ approvedCount }}</p>
+        <span class="ml-2 text-sm text-gray-400">Confirmed</span>
+      </div>
     </div>
+
+    <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 flex flex-col">
+      <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Rejected</p>
+      <div class="mt-auto flex items-baseline">
+        <p class="text-4xl font-extrabold text-red-500">{{ rejectedCount }}</p>
+        <span class="ml-2 text-sm text-gray-400">Cancelled</span>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isDataLoaded" class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+    
+    <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+      
+      <div class="flex flex-col sm:flex-row justify-between items-center mb-6">
+        <h3 class="text-lg font-bold text-gray-800">Booking Trends</h3>
+        
+        <div class="bg-gray-100 p-1 rounded-lg flex space-x-1 mt-4 sm:mt-0">
+          <button (click)="updateChartFilter('Day')" 
+                  [class]="currentChartFilter === 'Day' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                  class="px-3 py-1 text-sm font-medium rounded-md transition-all">
+            Daily
+          </button>
+          <button (click)="updateChartFilter('Week')" 
+                  [class]="currentChartFilter === 'Week' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                  class="px-3 py-1 text-sm font-medium rounded-md transition-all">
+            Weekly
+          </button>
+          <button (click)="updateChartFilter('Month')" 
+                  [class]="currentChartFilter === 'Month' ? 'bg-white text-blue-600 shadow-sm' : 'text-gray-500 hover:text-gray-700'"
+                  class="px-3 py-1 text-sm font-medium rounded-md transition-all">
+            Monthly
+          </button>
+        </div>
+      </div>
+
+      <div id="chart">
+        <apx-chart
+          [series]="trendChartOptions.series"
+          [chart]="trendChartOptions.chart"
+          [xaxis]="trendChartOptions.xaxis"
+          [yaxis]="trendChartOptions.yaxis"
+          [stroke]="trendChartOptions.stroke"
+          [tooltip]="trendChartOptions.tooltip"
+          [dataLabels]="trendChartOptions.dataLabels"
+          [plotOptions]="trendChartOptions.plotOptions"
+          [colors]="trendChartOptions.colors"
+          [grid]="trendChartOptions.grid"
+          [states]="trendChartOptions.states"
+        ></apx-chart>
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+      <h3 class="text-lg font-bold text-gray-800 mb-4">Booking Status</h3>
+      <div id="chart">
+        <apx-chart
+          [series]="statusChartOptions.series"
+          [chart]="statusChartOptions.chart"
+          [labels]="statusChartOptions.labels"
+          [colors]="statusChartOptions.colors"
+          [legend]="statusChartOptions.legend"
+          [plotOptions]="statusChartOptions.plotOptions"
+          [states]="statusChartOptions.states"
+          [dataLabels]="statusChartOptions.dataLabels"
+        ></apx-chart>
+      </div>
+    </div>
+  </div>
 
   <div>
-    <h2 class="text-2xl font-bold text-blue-700 mb-4">Management Links</h2>
+    <h2 class="text-xl font-bold text-gray-700 mb-4">Quick Actions</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-      <a routerLink="/admin/bookings" class="block p-6 bg-white rounded-2xl shadow-lg border border-blue-200/50 hover:shadow-xl hover:shadow-blue-300/20 hover:border-blue-400 hover:scale-[1.02] transition-all duration-300">
-        <h3 class="text-xl font-semibold text-blue-600 mb-2">Manage Bookings</h3>
-        <p class="text-gray-500">Approve or reject all user booking requests.</p>
+      <a routerLink="/admin/bookings" class="block p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl hover:bg-gray-50 transition border border-gray-200 group">
+        <h3 class="text-lg font-semibold text-blue-600 group-hover:text-blue-800">Manage Bookings &rarr;</h3>
+        <p class="text-gray-500 text-sm mt-1">Approve or reject requests.</p>
       </a>
 
-      <a routerLink="/admin/guesthouses" class="block p-6 bg-white rounded-2xl shadow-lg border border-blue-200/50 hover:shadow-xl hover:shadow-blue-300/20 hover:border-blue-400 hover:scale-[1.02] transition-all duration-300">
-        <h3 class="text-xl font-semibold text-blue-600 mb-2">Manage Guest Houses</h3>
-        <p class="text-gray-500">Add, edit, or remove guest house properties.</p>
+      <a routerLink="/admin/guesthouses" class="block p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl hover:bg-gray-50 transition border border-gray-200 group">
+        <h3 class="text-lg font-semibold text-blue-600 group-hover:text-blue-800">Manage Guesthouses &rarr;</h3>
+        <p class="text-gray-500 text-sm mt-1">List properties.</p>
       </a>
 
-      <a routerLink="/admin/rooms" class="block p-6 bg-white rounded-2xl shadow-lg border border-blue-200/50 hover:shadow-xl hover:shadow-blue-300/20 hover:border-blue-400 hover:scale-[1.02] transition-all duration-300">
-        <h3 class="text-xl font-semibold text-blue-600 mb-2">Manage Rooms</h3>
-        <p class="text-gray-500">Define rooms within each guest house.</p>
+      <a routerLink="/admin/create-user" class="block p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl hover:bg-gray-50 transition border border-gray-200 group">
+        <h3 class="text-lg font-semibold text-blue-600 group-hover:text-blue-800">Create User &rarr;</h3>
+        <p class="text-gray-500 text-sm mt-1">Add a new admin or user.</p>
       </a>
 
-      <a routerLink="/admin/beds" class="block p-6 bg-white rounded-2xl shadow-lg border border-blue-200/50 hover:shadow-xl hover:shadow-blue-300/20 hover:border-blue-400 hover:scale-[1.02] transition-all duration-300">
-        <h3 class="text-xl font-semibold text-blue-600 mb-2">Manage Beds</h3>
-        <p class="text-gray-500">Add or remove individual beds in a room.</p>
-      </a>
-
-      <a routerLink="/admin/create-user" class="block p-6 bg-white rounded-2xl shadow-lg border border-blue-200/50 hover:shadow-xl hover:shadow-blue-300/20 hover:border-blue-400 hover:scale-[1.02] transition-all duration-300">
-        <h3 class="text-xl font-semibold text-blue-600 mb-2">Create New User</h3>
-        <p class="text-gray-500">Add a new admin or user to the system.</p>
+      <a routerLink="/admin/audit-logs" class="block p-6 bg-white rounded-2xl shadow-lg hover:shadow-xl hover:bg-gray-50 transition border border-gray-200 group">
+        <h3 class="text-lg font-semibold text-blue-600 group-hover:text-blue-800">View Logs &rarr;</h3>
+        <p class="text-gray-500 text-sm mt-1">Track system activity.</p>
       </a>
     </div>
   </div>

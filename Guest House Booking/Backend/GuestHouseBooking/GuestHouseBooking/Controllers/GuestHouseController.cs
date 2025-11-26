@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Collections;
+using GuestHouseBooking.Repositories.Interfaces;
 
 namespace GuestHouseBooking.Controllers
 {
@@ -15,13 +16,13 @@ namespace GuestHouseBooking.Controllers
     [Authorize(Roles = "Admin")]
     public class GuestHouseController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IGuestHouseRepository _guestHouseRepo;
         private readonly UserResolverService _userResolver;
         private readonly IAuditLogService _auditLogService;
 
-        public GuestHouseController(ApplicationDbContext context, UserResolverService userResolver, IAuditLogService auditLogService)
+        public GuestHouseController(IGuestHouseRepository guestHouseRepo, UserResolverService userResolver, IAuditLogService auditLogService)
         {
-            _context = context;
+            _guestHouseRepo = guestHouseRepo;
             _userResolver = userResolver;
             _auditLogService = auditLogService;
         }
@@ -29,28 +30,26 @@ namespace GuestHouseBooking.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GuestHouseDto>>> GetGuestHouses()
         {
-            return await _context.GuestHouses
-                .Where(g => !g.Deleted)
-                .Select(g => new GuestHouseDto
-                {
-                    GuestHouseId = g.GuestHouseId,
-                    Name = g.Name,
-                    Location = g.Location,
-                    Description = g.Description,
-                    ImageUrl = g.ImageUrl
-                }).ToListAsync();
+            var guestHouses = await _guestHouseRepo.GetAllActiveAsync();
+
+            var dtos = guestHouses.Select(g => new GuestHouseDto
+            {
+                GuestHouseId = g.GuestHouseId,
+                Name = g.Name,
+                Location = g.Location,
+                Description = g.Description,
+                ImageUrl = g.ImageUrl
+            });
+
+            return Ok(dtos);
         }
 
         [HttpPost]
         public async Task<ActionResult<GuestHouseDto>> CreateGuestHouse([FromBody] GuestHouseCreateDto dto)
         {
-            try {
+            try
+            {
                 var currentUserId = _userResolver.GetUserId();
-
-                if (currentUserId == 0)
-                {
-                    return BadRequest(new { message = "Could not resolve user ID from token." });
-                }
 
                 var guestHouse = new GuestHouse
                 {
@@ -62,8 +61,8 @@ namespace GuestHouseBooking.Controllers
                     CreatedDate = DateTime.UtcNow
                 };
 
-                _context.GuestHouses.Add(guestHouse);
-                await _context.SaveChangesAsync();
+                // Use Repository Add
+                await _guestHouseRepo.AddAsync(guestHouse);
 
                 await _auditLogService.LogAction("GuestHouse Created", currentUserId, $"New GH: {guestHouse.Name}, ID: {guestHouse.GuestHouseId}");
 
@@ -80,50 +79,38 @@ namespace GuestHouseBooking.Controllers
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.ToString());
-                return StatusCode(500, new
-                {
-                    message = "An internal server error occurred.",
-                    details = ex.Message,
-                    innerException = ex.InnerException?.Message 
-                });
+                return StatusCode(500, new { message = "Error", details = ex.Message });
             }
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<GuestHouseDto>> GetGuestHouse(int id)
         {
-            var guestHouse = await _context.GuestHouses
-                .Where(g => g.GuestHouseId == id && !g.Deleted)
-                .Select(g => new GuestHouseDto
-                {
-                    GuestHouseId = g.GuestHouseId,
-                    Name = g.Name,
-                    Location = g.Location,
-                    Description = g.Description
-                })
-                .FirstOrDefaultAsync();
+            var g = await _guestHouseRepo.GetByIdAsync(id);
 
-            if (guestHouse == null)
+            if (g == null || g.Deleted) return NotFound();
+
+            var dto = new GuestHouseDto
             {
-                return NotFound();
-            }
+                GuestHouseId = g.GuestHouseId,
+                Name = g.Name,
+                Location = g.Location,
+                Description = g.Description,
+                ImageUrl = g.ImageUrl
+            };
 
-            return Ok(guestHouse);
+            return Ok(dto);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateGuestHouse(int id, [FromBody] GuestHouseCreateDto dto)
         {
-            var guestHouse = await _context.GuestHouses.FindAsync(id);
+            var guestHouse = await _guestHouseRepo.GetByIdAsync(id);
 
-            if (guestHouse == null || guestHouse.Deleted)
-            {
-                return NotFound();
-            }
+            if (guestHouse == null || guestHouse.Deleted) return NotFound();
 
             var currentUserId = _userResolver.GetUserId();
-            string oldVal = $"Name: {guestHouse.Name}, Location: {guestHouse.Location}";
+            string oldVal = $"Name: {guestHouse.Name}";
 
             guestHouse.Name = dto.Name;
             guestHouse.Location = dto.Location;
@@ -132,11 +119,10 @@ namespace GuestHouseBooking.Controllers
             guestHouse.ModifiedBy = currentUserId;
             guestHouse.ModifiedDate = DateTime.UtcNow;
 
-            _context.Entry(guestHouse).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            // Use Repository Update
+            await _guestHouseRepo.UpdateAsync(guestHouse);
 
-            string newVal = $"Name: {dto.Name}, Location: {dto.Location}";
-            await _auditLogService.LogAction("Update GuestHouse", currentUserId, newVal, oldVal);
+            await _auditLogService.LogAction("Update GuestHouse", currentUserId, $"Name: {dto.Name}", oldVal);
 
             return NoContent();
         }
@@ -144,20 +130,13 @@ namespace GuestHouseBooking.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteGuestHouse(int id)
         {
-            var guestHouse = await _context.GuestHouses.FindAsync(id);
-            if (guestHouse == null || guestHouse.Deleted)
-            {
-                return NotFound();
-            }
+            var guestHouse = await _guestHouseRepo.GetByIdAsync(id);
+            if (guestHouse == null || guestHouse.Deleted) return NotFound();
 
             var currentUserId = _userResolver.GetUserId();
 
-            guestHouse.Deleted = true;
-            guestHouse.DeletedBy = currentUserId;
-            guestHouse.DeletedDate = DateTime.UtcNow;
-
-            _context.Entry(guestHouse).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            // Use Repository Soft Delete
+            await _guestHouseRepo.SoftDeleteAsync(id, currentUserId);
 
             await _auditLogService.LogAction("Soft Delete GuestHouse", currentUserId, $"GH ID: {id} marked as deleted.");
 

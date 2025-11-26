@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { GuesthouseService } from 'src/app/services/guesthouse.service';
 import { RoomService, RoomDto, RoomCreateDto } from 'src/app/services/room.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr'; // <-- Import
 
 @Component({
   selector: 'app-guesthouse-form',
@@ -29,7 +30,8 @@ export class GuesthouseFormComponent implements OnInit {
     private roomService: RoomService, // <-- Inject RoomService
     private router: Router,
     private route: ActivatedRoute,
-    private zone: NgZone 
+    private zone: NgZone, 
+    private toastr: ToastrService, // <-- Inject Toastr
   ) {
     // Form for Guesthouse
     this.guesthouseForm = this.fb.group({
@@ -79,12 +81,12 @@ export class GuesthouseFormComponent implements OnInit {
         .subscribe({
           next: () => {
             this.isLoading = false;
+            this.toastr.success('Guesthouse updated successfully!', 'Success'); // <-- NICE UI
             // You can add a success toast here
           },
           error: (err: HttpErrorResponse) => {
             this.isLoading = false; 
-            console.error('Guesthouse update failed', err.error);
-            alert(err.error?.innerException || err.error?.details || 'Update failed.');
+            this.toastr.error(err.error?.details || 'Update failed', 'Error'); // <-- NICE UI
           }
         });
     } else {
@@ -93,6 +95,7 @@ export class GuesthouseFormComponent implements OnInit {
         .subscribe({
           next: (newGuesthouse) => {
             this.isLoading = false;
+            this.toastr.success('Guesthouse created! Redirecting...', 'Success'); // <-- NICE UI
             // Step 1 -> Step 2: Go to Add Room page
             this.zone.run(() => {
               this.router.navigate(['/admin/room/new'], { 
@@ -104,7 +107,7 @@ export class GuesthouseFormComponent implements OnInit {
             this.isLoading = false;
             console.error('Guesthouse create failed:', err.error); 
             let errorMsg = err.error?.innerException || err.error?.details || 'Failed to create guesthouse.';
-            alert(errorMsg);
+            this.toastr.error(errorMsg, 'Error');
           }
         });
     }

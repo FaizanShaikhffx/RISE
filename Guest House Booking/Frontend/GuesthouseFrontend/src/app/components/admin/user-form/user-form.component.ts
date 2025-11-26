@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
-import { HttpErrorResponse } from '@angular/common/http'; // <-- 1. IMPORT THIS
+import { HttpErrorResponse } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr'; // 1. Import Toastr
 
 @Component({
   selector: 'app-user-form',
@@ -10,59 +11,60 @@ import { HttpErrorResponse } from '@angular/common/http'; // <-- 1. IMPORT THIS
 })
 export class UserFormComponent {
   form: FormGroup;
-  successMessage: string | null = null;
-  errorMessage: string | null = null;
+  isLoading = false; // 2. Add loading state
 
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService, // 3. Inject Toastr
+    private zone: NgZone // 4. Inject NgZone for navigation
   ) {
     this.form = this.fb.group({
       userName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       gender: ['Male', Validators.required],
-      role: ['User', Validators.required] // Default to 'User'
+      role: ['User', Validators.required]
     });
   }
 
   onSubmit() {
-    if (this.form.invalid) {
+    if (this.form.invalid || this.isLoading) {
       return;
     }
 
-    this.successMessage = null;
-    this.errorMessage = null;
+    this.isLoading = true; // Start loading
 
     this.userService.createUser(this.form.value).subscribe({
-      
-      // --- 2. THIS IS THE SUCCESS FIX ---
-      // We explicitly type 'response' and use the message from the API
       next: (response: { message: string }) => {
-        this.successMessage = response.message; 
-        this.form.reset({ gender: 'Male', role: 'User' }); // Reset the form
-      },
-      
-      // --- 3. THIS IS THE ERROR FIX ---
-      // We explicitly type 'err' and add robust logic
-      error: (err: HttpErrorResponse) => {
-        let message = 'An unknown error occurred.';
+        this.isLoading = false;
         
+        // 5. Show success toast
+        this.toastr.success(response.message || 'User created successfully!', 'Success');
+        
+        // 6. Redirect to Dashboard
+        this.zone.run(() => {
+          this.router.navigate(['/admin/dashboard']);
+        });
+      },
+      error: (err: HttpErrorResponse) => {
+        this.isLoading = false;
+        
+        // 7. Handle Error
+        let message = 'An unknown error occurred.';
         if (typeof err.error === 'string') {
-          // This handles your API's "Email address is already in use."
           message = err.error;
         } else if (err.error?.message) {
-          // This handles if the API sends an object
           message = err.error.message;
         }
         
-        this.errorMessage = message;
+        this.toastr.error(message, 'Creation Failed');
         console.error('Create user failed', err);
       }
     });
   }
 
   onCancel() {
-    this.router.navigate(['/admin-dashboard']);
+    this.router.navigate(['/admin/dashboard']);
   }
 }

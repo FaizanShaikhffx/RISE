@@ -5,6 +5,7 @@ import { RoomService, RoomDto, RoomCreateDto } from 'src/app/services/room.servi
 import { GuesthouseService, GuestHouseDto } from 'src/app/services/guesthouse.service';
 import { BedService, BedDto, BedCreateDto } from 'src/app/services/bed.service'; // <-- Import Bed services
 import { HttpErrorResponse } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-room-form',
@@ -38,7 +39,8 @@ export class RoomFormComponent implements OnInit {
     private bedService: BedService, // <-- Inject BedService
     private router: Router,
     private route: ActivatedRoute,
-    private zone: NgZone
+    private zone: NgZone,
+    private toastr: ToastrService, // <-- Inject
   ) {
     // Form for Room
     this.roomForm = this.fb.group({
@@ -107,11 +109,13 @@ export class RoomFormComponent implements OnInit {
       this.roomService.update(this.currentRoomId, roomData).subscribe({
         next: () => {
           this.isLoading = false;
+          this.toastr.success('Room updated successfully!'); // <-- Success Toast
+          this.router.navigate(['/admin/guesthouse/edit', roomData.guestHouseId]);
           // You can show a success message here
         },
         error: (err) => {
           this.isLoading = false;
-          alert('Failed to update room.');
+          this.toastr.error('Failed to update room.', 'Error'); // <-- Error Toast
         }
       });
     } else {
@@ -119,6 +123,7 @@ export class RoomFormComponent implements OnInit {
       this.roomService.create(roomData).subscribe({
         next: (newRoom) => {
           this.isLoading = false;
+          this.toastr.success('Room created successfully!'); // <-- Success Toast
           if (this.isWizardFlow) {
             // --- Step 2 -> Step 3: Go to Add Beds ---
             this.zone.run(() => {
@@ -136,7 +141,7 @@ export class RoomFormComponent implements OnInit {
         },
         error: (err: HttpErrorResponse) => {
           this.isLoading = false;
-          alert(err.error?.innerException || 'Failed to create room.');
+          this.toastr.error(err.error?.innerException || 'Failed to create room.', 'Error');
         }
       });
     }

@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BedService, BedCreateDto, BedDto } from 'src/app/services/bed.service';
 import { RoomService, RoomDto } from 'src/app/services/room.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-bed-form',
@@ -30,7 +31,8 @@ export class BedFormComponent implements OnInit {
     private roomService: RoomService, 
     private router: Router,
     private route: ActivatedRoute,
-    private zone: NgZone
+    private zone: NgZone,
+    private toastr: ToastrService,
   ) {
     this.form = this.fb.group({
       roomId: [null, Validators.required],
@@ -105,7 +107,7 @@ export class BedFormComponent implements OnInit {
         },
         error: (err) => {
           this.isLoading = false;
-          alert('Failed to update bed.');
+          this.toastr.error('Failed to update bed.', 'Error');
         }
       });
     } else {
@@ -115,18 +117,19 @@ export class BedFormComponent implements OnInit {
           this.isLoading = false;
           if (this.isWizardFlow) {
             // --- Wizard: Reset form to add another ---
-            this.successMessage = `Bed "${newBed.bedNumber}" created successfully! Add another.`;
+            this.toastr.success(`Bed "${newBed.bedNumber}" added! Add another.`, 'Success');
             this.form.get('bedNumber')?.reset(); // Reset form
             this.loadBeds(); // Refresh the list
             setTimeout(() => this.successMessage = null, 3000); // Hide message
           } else {
             // Normal create, go back to guesthouse list
+            this.toastr.success('Bed created successfully!');
             this.router.navigate(['/admin/guesthouses']);
           }
         },
         error: (err: HttpErrorResponse) => {
           this.isLoading = false;
-          alert(err.error?.innerException || 'Failed to create bed.');
+          this.toastr.error('Failed to create bed.', 'Error');
         }
       });
     }

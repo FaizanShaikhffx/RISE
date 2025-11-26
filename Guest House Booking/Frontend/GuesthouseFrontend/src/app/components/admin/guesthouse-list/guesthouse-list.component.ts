@@ -1,5 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core'; 
 import { GuesthouseService, GuestHouseDto } from 'src/app/services/guesthouse.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-guesthouse-list',
@@ -11,7 +12,8 @@ export class GuesthouseListComponent implements OnInit {
 
   constructor(
     private guesthouseService: GuesthouseService,
-    private zone: NgZone 
+    private zone: NgZone, 
+    private toastr: ToastrService,
   ) {}
 
   ngOnInit(): void {
@@ -30,7 +32,7 @@ export class GuesthouseListComponent implements OnInit {
       next: () => {
         this.zone.run(() => {
           // 3. Set the success message
-          this.successMessage = 'Guesthouse deleted successfully!';
+          this.toastr.success('Guesthouse deleted successfully.', 'Deleted');
           this.loadGuesthouses(); // Refresh the list
 
           // 4. Make the message disappear after 3 seconds
@@ -40,8 +42,7 @@ export class GuesthouseListComponent implements OnInit {
         });
       },
       error: (err) => {
-        console.error('Delete failed', err);
-        // NO ALERT
+       this.toastr.error('Failed to delete guesthouse.', 'Error');
       }
     });
   }

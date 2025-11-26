@@ -1,6 +1,7 @@
 ﻿using GuestHouseBooking.Data;
 using GuestHouseBooking.DTOs;
 using GuestHouseBooking.Models;
+using GuestHouseBooking.Repositories.Interfaces; // Import
 using GuestHouseBooking.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,13 +15,13 @@ namespace GuestHouseBooking.Controllers
     [Authorize(Roles = "Admin")]
     public class BedController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IBedRepository _bedRepo;
         private readonly UserResolverService _userResolver;
         private readonly IAuditLogService _auditLog;
 
-        public BedController(ApplicationDbContext context, UserResolverService userResolver, IAuditLogService auditLog)
+        public BedController(IBedRepository bedRepo, UserResolverService userResolver, IAuditLogService auditLog)
         {
-            _context = context;
+            _bedRepo = bedRepo; // Inject
             _userResolver = userResolver;
             _auditLog = auditLog;
         }
@@ -29,37 +30,37 @@ namespace GuestHouseBooking.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BedDto>>> GetBeds()
         {
-            return await _context.Beds
-                .Where(b => !b.Deleted) // <-- Filters out soft-deleted items
-                .Select(b => new BedDto // <-- Maps to DTO
-                {
-                    BedId = b.BedId,
-                    RoomId = b.RoomId,
-                    BedNumber = b.BedNumber
-                })
-                .ToListAsync();
+            var beds = await _bedRepo.GetAllActiveAsync();
+
+            var dtos = beds.Select(b => new BedDto
+            {
+                BedId = b.BedId,
+                RoomId = b.RoomId,
+                BedNumber = b.BedNumber
+            });
+
+            return Ok(dtos);
         }
 
         // GET: api/bed/5
         [HttpGet("{id}")]
         public async Task<ActionResult<BedDto>> GetBed(int id)
         {
-            var bed = await _context.Beds
-                .Where(b => b.BedId == id && !b.Deleted)
-                .Select(b => new BedDto
-                {
-                    BedId = b.BedId,
-                    RoomId = b.RoomId,
-                    BedNumber = b.BedNumber
-                })
-                .FirstOrDefaultAsync();
+            var bed = await _bedRepo.GetByIdAsync(id);
 
-            if (bed == null)
+            if (bed == null || bed.Deleted)
             {
                 return NotFound();
             }
 
-            return Ok(bed);
+            var dto = new BedDto
+            {
+                BedId = bed.BedId,
+                RoomId = bed.RoomId,
+                BedNumber = bed.BedNumber
+            };
+
+            return Ok(dto);
         }
 
         // GET: api/bed/by-room/5
@@ -67,15 +68,16 @@ namespace GuestHouseBooking.Controllers
         [HttpGet("by-room/{roomId}")]
         public async Task<ActionResult<IEnumerable<BedDto>>> GetBedsByRoom(int roomId)
         {
-            return await _context.Beds
-                .Where(b => b.RoomId == roomId && !b.Deleted)
-                .Select(b => new BedDto
-                {
-                    BedId = b.BedId,
-                    RoomId = b.RoomId,
-                    BedNumber = b.BedNumber
-                })
-                .ToListAsync();
+            var beds = await _bedRepo.GetBedsByRoomAsync(roomId);
+
+            var dtos = beds.Select(b => new BedDto
+            {
+                BedId = b.BedId,
+                RoomId = b.RoomId,
+                BedNumber = b.BedNumber
+            });
+
+            return Ok(dtos);
         }
 
         // POST: api/bed
@@ -88,11 +90,11 @@ namespace GuestHouseBooking.Controllers
             {
                 RoomId = dto.RoomId,
                 BedNumber = dto.BedNumber,
-              
+                // Bed model usually doesn't have CreatedBy based on your initial models, 
+                // but if you added it, set it here.
             };
 
-            _context.Beds.Add(bed);
-            await _context.SaveChangesAsync();
+            await _bedRepo.AddAsync(bed);
 
             await _auditLog.LogAction("Create Bed", currentUserId, $"New Bed: {bed.BedNumber} in RoomID: {bed.RoomId}", null);
 
@@ -109,7 +111,7 @@ namespace GuestHouseBooking.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateBed(int id, [FromBody] BedCreateDto dto)
         {
-            var bed = await _context.Beds.FindAsync(id);
+            var bed = await _bedRepo.GetByIdAsync(id);
 
             if (bed == null || bed.Deleted)
             {
@@ -122,19 +124,18 @@ namespace GuestHouseBooking.Controllers
             bed.RoomId = dto.RoomId;
             bed.BedNumber = dto.BedNumber;
 
-            _context.Entry(bed).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            await _bedRepo.UpdateAsync(bed);
 
             string newVal = $"BedNumber: {dto.BedNumber}, RoomID: {dto.RoomId}";
             await _auditLog.LogAction("Update Bed", currentUserId, newVal, oldVal);
 
-            return NoContent(); 
+            return NoContent();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteBed(int id)
         {
-            var bed = await _context.Beds.FindAsync(id);
+            var bed = await _bedRepo.GetByIdAsync(id);
             if (bed == null || bed.Deleted)
             {
                 return NotFound();
@@ -142,16 +143,13 @@ namespace GuestHouseBooking.Controllers
 
             var currentUserId = _userResolver.GetUserId();
 
-            //  SOFT DELETE
+            // Soft Delete
             bed.Deleted = true;
-           
-
-            _context.Entry(bed).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
+            await _bedRepo.UpdateAsync(bed);
 
             await _auditLog.LogAction("Soft Delete Bed", currentUserId, $"BedID: {id} marked as deleted", null);
 
-            return NoContent(); 
+            return NoContent();
         }
     }
 }

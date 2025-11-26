@@ -1,74 +1,102 @@
-<div class="container mx-auto p-6">
-  <div class="flex flex-col md:flex-row justify-between items-center mb-8">
-    <h1 class="text-4xl font-extrabold text-blue-800">My Bookings</h1>
-    <a routerLink="/new-booking" class="mt-4 md:mt-0 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-xl shadow-md transition duration-300 ease-in-out transform hover:scale-105">
-      Make a New Booking
+<div class="container mx-auto p-6 max-w-7xl">
+  
+  <div class="flex flex-col md:flex-row justify-between items-end mb-10 border-b border-gray-200 pb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">My Bookings</h1>
+      <p class="text-gray-500 mt-1">Manage your upcoming and past stays.</p>
+    </div>
+    <a routerLink="/new-booking" class="mt-4 md:mt-0 flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-6 rounded-lg shadow-md transition-all hover:shadow-lg transform hover:-translate-y-0.5">
+      <span>+</span> Book New Stay
     </a>
   </div>
 
-  <div *ngIf="isLoading" class="text-center py-12">
-    <p class="text-lg text-blue-600">Loading your bookings...</p>
-    </div>
-
-  <div *ngIf="!isLoading && myBookings.length === 0" 
-       class="bg-white p-8 rounded-2xl shadow-lg border border-blue-200/50 text-center">
-    <h2 class="text-2xl text-blue-700 font-semibold mb-3">You have no bookings.</h2>
-    <p class="text-gray-600 text-lg">Click "Make a New Booking" to get started!</p>
+  <div *ngIf="isLoading" class="flex flex-col items-center justify-center py-20">
+    <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mb-4"></div>
+    <p class="text-gray-500">Retrieving your bookings...</p>
   </div>
 
-  <div *ngIf="!isLoading && myBookings.length > 0" 
-       class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+  <div *ngIf="!isLoading && myBookings.length === 0" class="bg-gray-50 rounded-2xl border-2 border-dashed border-gray-300 p-12 text-center">
+    <div class="mx-auto h-16 w-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+      <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+    </div>
+    <h3 class="text-lg font-medium text-gray-900">No bookings yet</h3>
+    <p class="mt-1 text-gray-500">Time to plan your next getaway!</p>
+    <div class="mt-6">
+      <a routerLink="/new-booking" class="text-blue-600 hover:text-blue-800 font-medium hover:underline">Start browsing guesthouses &rarr;</a>
+    </div>
+  </div>
+
+  <div *ngIf="!isLoading && myBookings.length > 0" class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
     
     <div *ngFor="let b of myBookings" 
-         class="bg-white rounded-2xl shadow-lg overflow-hidden border border-blue-200/50 transition-all duration-300">
+         class="group bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col relative">
       
-      <div class="p-4 flex justify-between items-center border-b" 
+      <div class="absolute left-0 top-0 bottom-0 w-1.5"
            [ngClass]="{
-             'bg-yellow-50 border-yellow-200': b.status === 'Pending',
-             'bg-green-50 border-green-200': b.status === 'Approved',
-             'bg-red-50 border-red-200': b.status === 'Rejected'
+             'bg-yellow-400': b.status === 'Pending',
+             'bg-green-500': b.status === 'Approved',
+             'bg-red-500': b.status === 'Rejected'
            }">
-        <h2 class="text-xl font-bold"
-            [ngClass]="{
-              'text-yellow-800': b.status === 'Pending',
-              'text-green-800': b.status === 'Approved',
-              'text-red-800': b.status === 'Rejected'
-            }">
+      </div>
+
+      <div class="p-6 flex-1">
+        
+        <div class="flex justify-between items-start mb-4 pl-2">
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium uppercase tracking-wide"
+                [ngClass]="{
+                  'bg-yellow-100 text-yellow-800': b.status === 'Pending',
+                  'bg-green-100 text-green-800': b.status === 'Approved',
+                  'bg-red-100 text-red-800': b.status === 'Rejected'
+                }">
+            <span class="w-1.5 h-1.5 rounded-full mr-1.5"
+                  [ngClass]="{
+                    'bg-yellow-500': b.status === 'Pending',
+                    'bg-green-600': b.status === 'Approved',
+                    'bg-red-600': b.status === 'Rejected'
+                  }"></span>
+            {{ b.status }}
+          </span>
+          <span class="text-xs text-gray-400">#{{ b.bookingId }}</span>
+        </div>
+
+        <h3 class="text-xl font-bold text-gray-900 mb-1 pl-2 group-hover:text-blue-600 transition-colors">
           {{ b.guestHouseName }}
-        </h2>
-        <span class="font-bold py-1 px-3 rounded-full text-sm"
-              [ngClass]="{
-                'bg-yellow-500 text-white': b.status === 'Pending',
-                'bg-green-600 text-white': b.status === 'Approved',
-                'bg-red-600 text-white': b.status === 'Rejected'
-              }">
-          {{ b.status }}
-        </span>
-      </div>
-      
-      <div class="p-6">
-        <p class="text-blue-900 text-lg mb-4">
-          <strong>Room:</strong> {{ b.roomName }} / <strong>Bed:</strong> {{ b.bedNumber }}
+        </h3>
+        
+        <p class="text-sm text-gray-500 mb-6 pl-2 flex items-center gap-2">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+          {{ b.roomName }} &bull; Bed {{ b.bedNumber }}
         </p>
-        
-        <div class="flex flex-col space-y-2 text-gray-700">
-          <div>
-            <strong>From:</strong> {{ b.dateFrom | date: 'fullDate' }}
-          </div>
-          <div>
-            <strong>To:</strong> {{ b.dateTo | date: 'fullDate' }}
-          </div>
-          <div class="pt-2 border-t border-gray-200/80">
-            <strong>Booked On:</strong> {{ b.createdDate | date: 'short' }}
+
+        <div class="bg-gray-50 rounded-lg p-4 ml-2 border border-gray-100">
+          <div class="flex items-center justify-between text-sm">
+            <div>
+              <p class="text-xs text-gray-400 uppercase font-bold">Check-In</p>
+              <p class="font-semibold text-gray-700">{{ b.dateFrom | date: 'mediumDate' }}</p>
+            </div>
+            <div class="text-gray-300">&rarr;</div>
+            <div class="text-right">
+              <p class="text-xs text-gray-400 uppercase font-bold">Check-Out</p>
+              <p class="font-semibold text-gray-700">{{ b.dateTo | date: 'mediumDate' }}</p>
+            </div>
           </div>
         </div>
-        
-        <div *ngIf="b.status === 'Rejected' && b.remarks" 
-             class="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-          <p class="text-red-700 font-semibold">Reason for Rejection:</p>
-          <p class="text-red-600">{{ b.remarks }}</p>
+
+        <div *ngIf="b.status === 'Rejected' && b.remarks" class="mt-4 pl-2">
+          <p class="text-xs text-red-600 bg-red-50 p-2 rounded border border-red-100">
+            <strong>Note:</strong> {{ b.remarks }}
+          </p>
         </div>
+
       </div>
+
+      <div class="bg-gray-50 px-6 py-3 border-t border-gray-100 pl-8">
+        <p class="text-xs text-gray-400">
+          Booked on {{ b.createdDate | date: 'longDate' }}
+        </p>
+      </div>
+
     </div>
+
   </div>
 </div>

@@ -1,4 +1,6 @@
+@import 'ngx-toastr/toastr'; /* <-- ADD THIS LINE */
 /* Add this to your main src/styles.css file */
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

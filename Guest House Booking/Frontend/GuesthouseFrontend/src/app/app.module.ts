@@ -27,6 +27,9 @@ import { AdminSidebarComponent } from './components/admin/admin-sidebar/admin-si
 import { AdminTopbarComponent } from './components/admin/admin-topbar/admin-topbar.component';
 import { AuditLogComponent } from './components/admin/audit-log/audit-log.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -60,7 +63,15 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     HttpClientModule, 
     FormsModule,
     ReactiveFormsModule,
-    CommonModule
+    CommonModule,
+    NgApexchartsModule,
+    BrowserAnimationsModule, 
+    ToastrModule.forRoot({   
+      timeOut: 3000,
+      positionClass: 'toast-bottom-right', 
+      preventDuplicates: true,
+    })
+    
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true }
